@@ -61,10 +61,52 @@ namespace dmMoWizz.Controllers
 
                Info info = new Info(jsonObj);
 
-                ViewBag.JSON = result;
 
                 return View(info);
             }
         }
+
+        public async Task<ActionResult> RecommendationsSimple()
+        {
+            var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
+
+            var accessToken = currentClaims.FirstOrDefault(x => x.Type == "urn:tokens:facebook");
+
+            if (accessToken == null)
+            {
+                return (new HttpStatusCodeResult(HttpStatusCode.NotFound, "Token not found"));
+            }
+
+            string url = String.Format(
+                "https://graph.facebook.com/me?fields=id,name,likes.limit(1000){{category,name}}&access_token={0}", accessToken.Value);
+
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            request.Method = "GET";
+
+            List<Like> likes;
+
+            using (HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse)
+            {
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+
+                string result = await reader.ReadToEndAsync();
+
+                dynamic jsonObj = System.Web.Helpers.Json.Decode(result);
+
+                Info info = new Info(jsonObj);
+
+                likes = info.Likes.Data;
+
+            }
+
+
+
+            return View();
+        }
+
+        #region Helper Methods
+
+
+        #endregion
     }
 }
