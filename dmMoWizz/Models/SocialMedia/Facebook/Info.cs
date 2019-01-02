@@ -11,16 +11,21 @@ namespace dmMoWizz.Models.SocialMedia.Facebook
 
         public Info(dynamic json)
         {
-            jsonObj = json;
+            if (json != null)
+            {
+                jsonObj = json;
 
-            Id = jsonObj.id;
-            Name = jsonObj.name;
-            Likes = new Likes(jsonObj.likes);
+                Id = jsonObj.id;
+                Name = jsonObj.name;
+                Likes = new Likes(jsonObj.likes);
+                Friends = new Friends(jsonObj.friends);
+            }
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
         public Likes Likes { get; set; }
+        public Friends Friends { get; set; }
     }
 
     public class Likes
@@ -28,18 +33,19 @@ namespace dmMoWizz.Models.SocialMedia.Facebook
         public dynamic jsonObj { get; set; }
         public Likes(dynamic json)
         {
-            jsonObj = json;
-
-            Data = new List<Like>();
-            //Data = new Like[jsonObj.data.Length];
-
-            for (int i = 0; i < jsonObj.data.Length; i++)
+            if (json != null)
             {
-                if (jsonObj.data[i].category.Equals("Movie"))
+                jsonObj = json;
+
+                Data = new List<Like>();
+
+                for (int i = 0; i < jsonObj.data.Length; i++)
                 {
-                    Data.Add(new Like(jsonObj.data[i]));
+                    if (jsonObj.data[i].category.Equals("Movie"))
+                    {
+                        Data.Add(new Like(jsonObj.data[i]));
+                    }
                 }
-                //Data[i] = new Like(jsonObj.data[i]);
             }
         }
 
@@ -52,15 +58,58 @@ namespace dmMoWizz.Models.SocialMedia.Facebook
 
         public Like(dynamic json)
         {
-            jsonObj = json;
+            if (json != null)
+            {
+                jsonObj = json;
 
-            Id = jsonObj.id;
-            Name = jsonObj.name;
-            Category = jsonObj.category;
+                Id = jsonObj.id;
+                Name = jsonObj.name;
+                Category = jsonObj.category;
+            }
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
+    }
+
+    public class Friends
+    {
+        public dynamic jsonObj { get; set; }
+        public Friends(dynamic json)
+        {
+            if (json != null)
+            {
+                jsonObj = json;
+
+                Data = new List<Friend>();
+
+                for (int i = 0; i < jsonObj.data.Length; i++)
+                {
+                    Data.Add(new Friend(jsonObj.data[i]));
+                }
+            }
+        }
+
+        public List<Friend> Data { get; set; }
+    }
+
+    public class Friend
+    {
+        public dynamic jsonObj { get; set; }
+
+        public Friend(dynamic json)
+        {
+            if (json != null)
+            {
+                jsonObj = json;
+
+                Id = jsonObj.id;
+                Likes = new Likes(jsonObj.likes);
+            }
+        }
+
+        public string Id { get; set; }
+        public Likes Likes { get; set; }
     }
 }

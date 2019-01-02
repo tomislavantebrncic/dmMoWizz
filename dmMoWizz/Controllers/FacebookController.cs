@@ -87,12 +87,13 @@ namespace dmMoWizz.Controllers
             }
 
             string url = String.Format(
-                "https://graph.facebook.com/me?fields=id,name,likes.limit(1000){{category,name}}&access_token={0}", accessToken.Value);
+                "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}", 
+                accessToken.Value);
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             request.Method = "GET";
 
-            List<Like> likes;
+            Info info;
 
             using (HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse)
             {
@@ -102,20 +103,17 @@ namespace dmMoWizz.Controllers
 
                 dynamic jsonObj = System.Web.Helpers.Json.Decode(result);
 
-                Info info = new Info(jsonObj);
-
-                likes = info.Likes.Data;
+                info = new Info(jsonObj);
             }
 
             ConcurrentDictionary<string, int> similars = new ConcurrentDictionary<string, int>();
-
-            foreach (Like movie in likes)
+            foreach (var movie in info.Likes.Data)
             {
                 var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
                 if (movieInfo != null)
                 {
                     System.Diagnostics.Debug.WriteLine(movieInfo.title);
-                    foreach (Result hit in movieInfo.similar.results)
+                    foreach (var hit in movieInfo.similar.results)
                     {
                         var t = hit.title;
                         similars.AddOrUpdate(t, 1, (id, count) => count + 1);
@@ -123,8 +121,22 @@ namespace dmMoWizz.Controllers
                 }
             }
 
-            var sorted = similars.ToList();
+            ConcurrentDictionary<string, int> friendsSimilars = new ConcurrentDictionary<string, int>();
+            foreach (var friend in info.Friends.Data)
+            {
+                foreach (var movie in friend.Likes.Data)
+                {
+                    var t = movie.Name;
+                    friendsSimilars.AddOrUpdate(t, 1, (id, count) => count + 1);
+                }
+            }
 
+            foreach (var pair in friendsSimilars)
+            {
+                similars.AddOrUpdate(pair.Key, pair.Value, (id, count) => count + pair.Value * 2);
+            }
+
+            var sorted = similars.ToList();
             sorted.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
 
             return View(sorted);
