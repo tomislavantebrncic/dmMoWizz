@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using dmMoWizz.Models.SocialMedia.Facebook;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace dmMoWizz.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Posts()
+        public async Task<ActionResult> Likes()
         {
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
 
@@ -44,7 +45,8 @@ namespace dmMoWizz.Controllers
                 return (new HttpStatusCodeResult(HttpStatusCode.NotFound, "Token not found"));
             }
 
-            string url = String.Format("https://graph.facebook.com/me?fields=id,name,gender&access_token={0}", accessToken);
+            string url = String.Format(
+                "https://graph.facebook.com/me?fields=id,name,likes.limit(1000){{category,name}}&access_token={0}", accessToken.Value);
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             request.Method = "GET";
@@ -55,10 +57,14 @@ namespace dmMoWizz.Controllers
 
                 string result = await reader.ReadToEndAsync();
 
-                ViewBag.JSON = result;
-            }
+                dynamic jsonObj = System.Web.Helpers.Json.Decode(result);
 
-            return View();
+               Info info = new Info(jsonObj);
+
+                ViewBag.JSON = result;
+
+                return View(info);
+            }
         }
     }
 }

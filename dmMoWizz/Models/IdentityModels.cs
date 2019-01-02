@@ -21,7 +21,7 @@ namespace dmMoWizz.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("MyConnectionString", throwIfV1Schema: false)
         {
         }
 

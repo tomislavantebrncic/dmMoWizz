@@ -1,0 +1,16 @@
+﻿@model dmMoWizz.Models.SocialMedia.Facebook.Info
+@{
+    ViewBag.Title = "Likes";
+}
+
+<h2>Likes</h2>
+
+<p>@*@Html.Raw(ViewBag.JSON)*@</p>
+<div class="panel-group">
+    @foreach(var post in Model.Likes.Data)
+    {
+        <div class="panel-heading">@post.Name</div>
+        <div class="panel-body">@post.Category</div>
+        <div class="panel-footer"></div>
+    }
+</div>
