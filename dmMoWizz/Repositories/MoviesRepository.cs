@@ -14,10 +14,45 @@ namespace dmMoWizz.Repositories
 
         public MoviesRepository()
         {
-            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["FacebookAppId"]);
+            MongoClient client = new MongoClient("mongodb://localhost:27017");
             IMongoDatabase db = client.GetDatabase("dm-mowizz");
 
             _moviesCollection = db.GetCollection<MovieInfo>("movies");
+        }
+
+        public List<MovieInfo> GetMovies()
+        {
+            return _moviesCollection.Find(m => true).ToList();
+        }
+
+        public List<MovieInfo> GetMovies(string titleRegex)
+        {
+            var filter = Builders<MovieInfo>.Filter.Regex(m => m.title, new MongoDB.Bson.BsonRegularExpression(titleRegex, "i"));
+            return _moviesCollection.Find(filter).ToList();
+        }
+
+        public List<MovieInfo> GetMovies(string titleRegex, string genre, string year)
+        {
+            var builder = Builders<MovieInfo>.Filter;
+
+            IList<FilterDefinition<MovieInfo>> filters = new List<FilterDefinition<MovieInfo>>();
+
+            if (!String.IsNullOrEmpty(titleRegex))
+            {
+                filters.Add(builder.Regex(m => m.title, new MongoDB.Bson.BsonRegularExpression(titleRegex, "i")));
+            }
+
+            if (!year.Equals("All"))
+            {
+                filters.Add(builder.Regex(m => m.release_date, new MongoDB.Bson.BsonRegularExpression(".*" + year + ".*")));
+            }
+
+            if (!genre.Equals("All"))
+            {
+                filters.Add(builder.ElemMatch(m => m.genres, genre));
+            }
+
+            return _moviesCollection.Find(builder.And(filters)).ToList();
         }
 
         public MovieInfo GetMovie(int id)

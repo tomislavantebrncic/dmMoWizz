@@ -1,7 +1,10 @@
-﻿using dmMoWizz.Models.SocialMedia.Facebook;
+﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Models.SocialMedia.Facebook;
+using dmMoWizz.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +18,7 @@ namespace dmMoWizz.Controllers
     [Authorize]
     public class FacebookController : Controller
     {
+        private readonly MoviesRepository _moviesRepository;
         private ApplicationUserManager _userManager;
 
         public ApplicationUserManager UserManager
@@ -28,6 +32,12 @@ namespace dmMoWizz.Controllers
                 _userManager = value;
             }
         }
+
+        public FacebookController()
+        {
+            _moviesRepository = new MoviesRepository();
+        }
+
         // GET: Facebook
         public ActionResult Index()
         {
@@ -59,14 +69,13 @@ namespace dmMoWizz.Controllers
 
                 dynamic jsonObj = System.Web.Helpers.Json.Decode(result);
 
-               Info info = new Info(jsonObj);
-
+                Info info = new Info(jsonObj);
 
                 return View(info);
             }
         }
 
-        public async Task<ActionResult> RecommendationsSimple()
+        public async Task<ActionResult> Recommendations()
         {
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
 
@@ -96,12 +105,29 @@ namespace dmMoWizz.Controllers
                 Info info = new Info(jsonObj);
 
                 likes = info.Likes.Data;
-
             }
 
+            ConcurrentDictionary<string, int> similars = new ConcurrentDictionary<string, int>();
 
+            foreach (Like movie in likes)
+            {
+                var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
+                if (movieInfo != null)
+                {
+                    System.Diagnostics.Debug.WriteLine(movieInfo.title);
+                    foreach (Result hit in movieInfo.similar.results)
+                    {
+                        var t = hit.title;
+                        similars.AddOrUpdate(t, 1, (id, count) => count + 1);
+                    }
+                }
+            }
 
-            return View();
+            var sorted = similars.ToList();
+
+            sorted.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+
+            return View(sorted);
         }
 
         #region Helper Methods
