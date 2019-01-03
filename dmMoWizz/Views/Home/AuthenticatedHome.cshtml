@@ -1,0 +1,217 @@
+﻿@model dmMoWizz.Models.ViewModels.HomePageViewModel
+<div class="navbar-fixed black">
+    <nav>
+        <div class="nav-wrapper">
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field">
+                                    <i class="material-icons prefix" style="color:white">search</i>
+                                    <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
+                                    @*<label for="icon_prefix2">Search movies</label>*@
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+<div class="carousel carousel-slider center" style="height:500px">
+    @foreach (var movie in Model.Popular.Take(5))
+    {
+        <div class="carousel-item white-text" style="filter:grayscale(100%); background-image:url(@movie.PosterPath); background-size:cover; background-position:center">
+            @*<h2>@movie.Title</h2>
+                <p class="white-text">@movie.AverageRate</p>*@
+        </div>
+    }
+</div>
+
+
+@if (Model.Suggested != null && Model.Suggested.Count() > 0)
+{
+    <div class="section">
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <h5 style="color:#4db6ac">
+                    Top suggested
+                </h5>
+                <div class="row">
+                    @foreach (var movie in Model.Suggested.Take(4))
+                    {
+                        <div class="col s12 m3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                                    <span class="card-title">@movie.Title</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                </div>
+                                <div class="card-content">
+                                    @*<p>@movie.Overview</p>*@
+                                    <div class="valign-wrapper">
+                                        <div class="col s2 ">
+                                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">thumb_up</i>
+                                        </div>
+                                        <div class="progress col s6 valign-wrapper" style="margin-top:15px">
+                                            <div class="determinate" style="width: @movie.PersonalRate"></div>
+                                        </div>
+                                        <div class="col s2 offset-s1">
+                                            <span style="font-weight:bold; color:#4db6ac">@movie.PersonalRate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    @foreach (var movie in Model.Suggested.Skip(4).Take(4))
+                    {
+                        <div class="col s12 m3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                                    <span class="card-title">@movie.Title</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                </div>
+                                <div class="card-content">
+                                    @*<p>@movie.Overview</p>*@
+                                    <div class="valign-wrapper">
+                                        <div class="col s2 ">
+                                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">thumb_up</i>
+                                        </div>
+                                        <div class="progress col s6 valign-wrapper" style="margin-top:15px">
+                                            <div class="determinate" style="width: @movie.PersonalRate"></div>
+                                        </div>
+                                        <div class="col s2 offset-s1">
+                                            <span style="font-weight:bold; color:#4db6ac">@movie.PersonalRate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row center-align" style="color:#4db6ac">
+                    <i class="material-icons" style="font-size:3rem">expand_more</i>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="parallax-container" style="height:250px">
+    <div class="parallax"><img src="/Images/godfather.jpg"></div>
+</div>
+
+
+@if (Model.Watchlist != null && Model.Watchlist.Count() > 0)
+{
+    <div class="section">
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <h5 style="color:#4db6ac">
+                    Watchlist
+                </h5>
+                <div class="row">
+                    @foreach (var movie in Model.Watchlist)
+                    {
+                        <div class="col s12 m3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                                    <span class="card-title">@movie.Title</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                </div>
+                                <div class="card-content">
+                                    <p>@movie.Overview</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="parallax-container" style="height:250px">
+    <div class="parallax"><img src="/Images/hungergames.jpg"></div>
+</div>
+@if (Model.Popular != null && Model.Popular.Count() > 0)
+{
+    <div class="section">
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <h5 style="color:#4db6ac">
+                    Top picks
+                </h5>
+                <div class="row">
+                    @foreach (var movie in Model.Popular.Take(4))
+                    {
+                        <div class="col s12 m3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                                    <span class="card-title">@movie.Title</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                </div>
+                                <div class="card-content">
+                                    <p>@movie.Overview</p>
+                                    <div class="center-align">
+                                        <div class="valign-wrapper">
+                                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">star</i>
+                                            <span style="font-weight:bold; color:#4db6ac">@movie.AverageRate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    @foreach (var movie in Model.Popular.Skip(4).Take(4))
+                    {
+                        <div class="col s12 m3">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                                    <span class="card-title">@movie.Title</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                </div>
+                                <div class="card-content">
+                                    <p>@movie.Overview</p>
+                                    <div class="center-align">
+                                        <div class="valign-wrapper">
+                                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">star</i>
+                                            <span style="font-weight:bold; color:#4db6ac">@movie.AverageRate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.tooltipped').tooltip();
+        $('.parallax').parallax();
+        $('.carousel.carousel-slider').carousel({
+            fullWidth: true,
+            indicators: true
+        });
+        autoplay();
+    });
+    function autoplay() {
+        $('.carousel.carousel-slider').carousel('next');
+        setTimeout(autoplay, 5000);
+    }
+</script>

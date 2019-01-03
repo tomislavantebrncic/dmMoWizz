@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dmMoWizz.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,17 +13,22 @@ namespace dmMoWizz.Controllers
         public ActionResult Index()
         {
 
-
-
             return View();
         }
 
         public ActionResult Details(int movieId)
         {
+            //TODO fill data
 
+            //TEST DATA
+            var model = new MovieDetailsViewModel();
 
+            model.Budget = "15574737";
+            model.OriginalTitle = "test film";
+            model.Popularity = "5";
+            //remove later
 
-            return View();
+            return View(model);
         }
     }
 }
