@@ -1,0 +1,57 @@
+﻿@model IEnumerable<dmMoWizz.Models.ViewModels.HomePageMovieViewModel>
+<div class="row">
+    @foreach (var movie in Model.Take(4))
+    {
+        <div class="col s12 m3">
+            <div class="card">
+                <div class="card-image">
+                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                    <span class="card-title">@movie.Title</span>
+                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                </div>
+                <div class="card-content">
+                    @*<p>@movie.Overview</p>*@
+                    <div class="valign-wrapper">
+                        <div class="col s2 ">
+                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">thumb_up</i>
+                        </div>
+                        <div class="progress col s6 valign-wrapper" style="margin-top:15px">
+                            <div class="determinate" style="width: @movie.PersonalRate"></div>
+                        </div>
+                        <div class="col s2 offset-s1">
+                            <span style="font-weight:bold; color:#4db6ac">@movie.PersonalRate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    @foreach (var movie in Model.Skip(4).Take(4))
+    {
+        <div class="col s12 m3">
+            <div class="card">
+                <div class="card-image">
+                    <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
+                    <span class="card-title">@movie.Title</span>
+                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                </div>
+                <div class="card-content">
+                    @*<p>@movie.Overview</p>*@
+                    <div class="valign-wrapper">
+                        <div class="col s2 ">
+                            <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">thumb_up</i>
+                        </div>
+                        <div class="progress col s6 valign-wrapper" style="margin-top:15px">
+                            <div class="determinate" style="width: @movie.PersonalRate"></div>
+                        </div>
+                        <div class="col s2 offset-s1">
+                            <span style="font-weight:bold; color:#4db6ac">@movie.PersonalRate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

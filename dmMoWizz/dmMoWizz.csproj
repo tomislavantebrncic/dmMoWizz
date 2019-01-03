@@ -300,6 +300,7 @@
     <Content Include="Views\Shared\_LandingLayout.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
     <Content Include="Views\Home\AuthenticatedHome.cshtml" />
+    <Content Include="Views\Home\MoreSuggestedMovies.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

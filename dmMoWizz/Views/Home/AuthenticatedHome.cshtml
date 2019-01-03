@@ -98,8 +98,10 @@
                     }
                 </div>
                 <div class="row center-align" style="color:#4db6ac">
-                    <i class="material-icons" style="font-size:3rem">expand_more</i>
+                    <i class="material-icons"
+                       style="font-size:3rem; cursor:pointer" id="showMoreButton">expand_more</i>
                 </div>
+                <div id="moreMovies"></div>
             </div>
         </div>
     </div>
@@ -208,10 +210,22 @@
             fullWidth: true,
             indicators: true
         });
+        $('#showMoreButton').click(function () {
+            $.ajax({
+                url: "/home/moresuggestedmovies",
+                type: 'GET',
+                success: function (res) {
+                    document.getElementById("moreMovies").innerHTML = res;
+                    $('#showMoreButton').hide();
+                }
+            });
+        });
         autoplay();
     });
+
     function autoplay() {
         $('.carousel.carousel-slider').carousel('next');
         setTimeout(autoplay, 5000);
-    }
+    };
+
 </script>

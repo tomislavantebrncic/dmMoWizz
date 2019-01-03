@@ -52,5 +52,35 @@ namespace dmMoWizz.Controllers
             return View("AuthenticatedHome", model);
         }
 
+        public ActionResult MoreSuggestedMovies()
+        {
+            //TODO implement logic
+
+            //TEST DATA
+            var model = new List<HomePageMovieViewModel>();
+
+            var names = new string[]{"The Young Hedgehog", "Hedgehog Growing Up", "Hedgehog Fighting For Freedom", "Wild Hedgehogs",
+                "Hedgehogs Land", "Hedgehogs Taking Space", "The Hedgehog King", "Hedgehog In The War Of Love",
+                "Hedgehog and the Lobster", "Heavy Hedgehog", "The Hedgehogs Cars", "Over The Hedge"};
+
+            for (int i = 0; i < 8; ++i)
+            {
+                var movie = new HomePageMovieViewModel
+                {
+                    AverageRate = "7.8",
+                    Overview = "A movie of freedom and stupidity.",
+                    PersonalRate = ((float)i / 8 * 100).ToString() + "%",
+                    Title = names[i],
+                    BackdropPath = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
+                    PosterPath = "http://image.tmdb.org/t/p/w500//oYtkKiYx4ca1B8VvE8jxKCU7iN0.jpg"
+                };
+
+                model.Add(movie);
+            }
+            //zakomentirati ili obrisati test data
+
+            return PartialView("MoreSuggestedMovies", model);
+        }
+
     }
 }
