@@ -69,5 +69,13 @@ namespace dmMoWizz.Repositories
         {
             return _moviesCollection.Find(m => m.title.Equals(title)).FirstOrDefault();
         }
+
+        public void UpdateRating(int movieId, int incRating, int incCount)
+        {
+            var filter = Builders<MovieInfo>.Filter.Eq(m => m.id, movieId);
+            var update = Builders<MovieInfo>.Update.Inc(m => m.AppRating.Count, incCount).Inc(m => m.AppRating.Rating, incRating);
+
+            _moviesCollection.UpdateOne(filter, update);
+        }
     }
 }

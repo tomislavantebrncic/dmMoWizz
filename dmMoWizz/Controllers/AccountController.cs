@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using dmMoWizz.Models;
+using dmMoWizz.Repositories;
 
 namespace dmMoWizz.Controllers
 {
@@ -17,15 +18,19 @@ namespace dmMoWizz.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private UserRepository _userRepository;
 
         public AccountController()
         {
+            _userRepository = new UserRepository();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+
+            _userRepository = new UserRepository();
         }
 
         public ApplicationSignInManager SignInManager
@@ -336,6 +341,7 @@ namespace dmMoWizz.Controllers
                     var user = await UserManager.FindAsync(loginInfo.Login);
                     if (user != null)
                     {
+                        StoreAdditionalDataInMongo(user);
                         await StoreClaimsTokens(user);
                         await SignInAsync(user, isPersistent: false);
                     }
@@ -381,6 +387,7 @@ namespace dmMoWizz.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        StoreAdditionalDataInMongo(user);
                         await StoreClaimsTokens(user);
                         await SignInAsync(user, isPersistent: false);
                         //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -430,6 +437,11 @@ namespace dmMoWizz.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private void StoreAdditionalDataInMongo(ApplicationUser user)
+        {
+            _userRepository.Add(user);
         }
 
         private async Task StoreClaimsTokens(ApplicationUser user)
