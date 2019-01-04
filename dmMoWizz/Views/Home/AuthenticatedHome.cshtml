@@ -8,7 +8,7 @@
                         <form class="col s12">
                             <div class="row">
                                 <div class="input-field">
-                                    <i class="material-icons prefix" style="color:white">search</i>
+                                    <i id="searchButton" class="material-icons prefix" style="color:white">search</i>
                                     <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
                                     @*<label for="icon_prefix2">Search movies</label>*@
                                 </div>
@@ -127,7 +127,7 @@
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                    @*<a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Remove from watchlist"><i class="material-icons">add_to_queue</i></a>*@
                                 </div>
                                 <div class="card-content">
                                     <p>@movie.Overview</p>
@@ -218,6 +218,13 @@
                     document.getElementById("moreMovies").innerHTML = res;
                     $('#showMoreButton').hide();
                 }
+            });
+        });
+        $('#searchButton').click(function () {
+            var name = $('#icon_prefix2').val;
+            $.ajax({
+                url: "/movies/FindMovieByName?name=" + name,
+                type: 'GET'
             });
         });
         autoplay();

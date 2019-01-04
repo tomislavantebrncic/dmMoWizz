@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Repositories;
+﻿using dmMoWizz.Models.ViewModels;
+using dmMoWizz.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -67,6 +68,64 @@ namespace dmMoWizz.Controllers
             }
 
             _moviesRepository.UpdateRating(movieId, incRating, incCount);
+        }
+
+        public ActionResult Watchlist()
+        {
+            var model = new List<WatchlistItemViewModel>();
+            model.Add(new WatchlistItemViewModel
+            {
+                Title = "The Great Fall",
+                AverageVote = "7.6",
+                Id = "7",
+                Overview = "The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time.",
+                PosterURL = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
+                Year = "2010",
+                PersonalRate = "77%",
+                Cast = new List<CastPersonViewModel> { new CastPersonViewModel {
+                        Character = "Mahthilda",
+                        Name = "Jennifer Lawrence",
+                        Order = 1
+                    },
+                    new CastPersonViewModel {
+                        Character = "Adrianne",
+                        Name = "Kate Olsen",
+                        Order = 2
+                    },
+                    new CastPersonViewModel {
+                        Character = "John",
+                        Name = "Michael Douglas",
+                        Order = 3
+                    },
+                }
+            });
+            model.Add(new WatchlistItemViewModel
+            {
+                Title = "The Great Fall",
+                AverageVote = "7.6",
+                Id = "7",
+                Overview = "The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time.",
+                PosterURL = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
+                Year = "2010",
+                PersonalRate = "77%",
+                Cast = new List<CastPersonViewModel> { new CastPersonViewModel {
+                        Character = "Mahthilda",
+                        Name = "Jennifer Lawrence",
+                        Order = 1
+                    },
+                    new CastPersonViewModel {
+                        Character = "Adrianne",
+                        Name = "Kate Olsen",
+                        Order = 2
+                    },
+                    new CastPersonViewModel {
+                        Character = "John",
+                        Name = "Michael Douglas",
+                        Order = 3
+                    },
+                }
+            });
+            return View(model);
         }
     }
 }
