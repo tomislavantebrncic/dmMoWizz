@@ -441,7 +441,10 @@ namespace dmMoWizz.Controllers
 
         private void StoreAdditionalDataInMongo(ApplicationUser user)
         {
-            _userRepository.Add(user);
+            if (_userRepository.Get(user.Id) == null)
+            {
+                _userRepository.Add(user);
+            }
         }
 
         private async Task StoreClaimsTokens(ApplicationUser user)
