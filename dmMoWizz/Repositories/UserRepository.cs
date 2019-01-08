@@ -26,7 +26,7 @@ namespace dmMoWizz.Repositories
             {
                 Id = user.Id,
                 Ratings = new HashSet<MovieRating>(),
-                Watchlist = new HashSet<int>(),
+                Watchlist = new HashSet<WatchlistMovie>(),
                 Watched = new HashSet<int>()
             };
 

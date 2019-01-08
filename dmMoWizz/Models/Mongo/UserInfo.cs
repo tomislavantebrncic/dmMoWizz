@@ -9,13 +9,17 @@ namespace dmMoWizz.Models.Mongo
     {
         public string Id { get; set; }
         public string Gender { get; set; }
-        public HashSet<int> Watchlist { get; set; }
+        public HashSet<WatchlistMovie> Watchlist { get; set; }
         public HashSet<int> Watched { get; set; }
         public HashSet<MovieRating> Ratings { get; set; }
 
         public bool AddToWatchlist(int id)
         {
-            return Watchlist.Add(id);
+            return Watchlist.Add(new WatchlistMovie
+            {
+                Id = id,
+                DateAdded = DateTime.Now
+            });
         }
 
         public void UpdateRatings(MovieRating rating)
@@ -47,6 +51,24 @@ namespace dmMoWizz.Models.Mongo
         public override int GetHashCode()
         {
             return 1151147474 + MovieId.GetHashCode();
+        }
+    }
+
+    public class WatchlistMovie
+    {
+        public int Id { get; set; }
+        public DateTime DateAdded { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var movie = obj as WatchlistMovie;
+            return movie != null &&
+                   Id == movie.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + Id.GetHashCode();
         }
     }
 }

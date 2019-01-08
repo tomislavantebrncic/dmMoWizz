@@ -67,7 +67,19 @@ namespace dmMoWizz.Repositories
 
         public MovieInfo GetMovieFromTitle(string title)
         {
-            return _moviesCollection.Find(m => m.title.Equals(title)).FirstOrDefault();
+            System.Diagnostics.Debug.WriteLine("Tražim: " + title);
+
+            var filter = Builders<MovieInfo>.Filter.Regex(m => m.title, new MongoDB.Bson.BsonRegularExpression(title, "i"));
+
+            var mi = _moviesCollection.Find(filter).FirstOrDefault();
+
+            if (mi != null)
+            {
+                System.Diagnostics.Debug.WriteLine("Našao: " + mi.title);
+            }
+
+            return mi;
+            return _moviesCollection.Find(m => m.title.ToLower().Equals(title.ToLower())).FirstOrDefault();
         }
 
         public void UpdateRating(int movieId, int incRating, int incCount)
@@ -76,6 +88,11 @@ namespace dmMoWizz.Repositories
             var update = Builders<MovieInfo>.Update.Inc(m => m.AppRating.Count, incCount).Inc(m => m.AppRating.Rating, incRating);
 
             _moviesCollection.UpdateOne(filter, update);
+        }
+
+        public void Insert(MovieInfo movie)
+        {
+            _moviesCollection.InsertOne(movie);
         }
     }
 }
