@@ -73,6 +73,8 @@ namespace dmMoWizz.Controllers
                 var movie = recommendation.Movie;
                 model.Suggested.Add(new HomePageMovieViewModel
                 {
+                    Id = movie.id,
+                    //TODO fill addedToWatchlist
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     PersonalRate = recommendation.Rating.ToString(),

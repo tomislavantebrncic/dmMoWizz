@@ -21,6 +21,7 @@ namespace dmMoWizz.Models.ViewModels
 
     public class HomePageMovieViewModel
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string PosterPath { get; set; }
         public string BackdropPath { get; set; }
@@ -29,5 +30,6 @@ namespace dmMoWizz.Models.ViewModels
         //averageRate je prosječna ocjena filma 1-10
         public string AverageRate { get; set; }
         public string Overview { get; set; }
+        public bool AddedToWatchlist { get; set; }
     }
 }
