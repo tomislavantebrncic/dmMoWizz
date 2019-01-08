@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -43,7 +44,7 @@ namespace dmMoWizz.Controllers
             _recommendationService = new RecommendationService();
         }
 
-        public async System.Threading.Tasks.Task<ActionResult> Index()
+        public async Task<ActionResult> Index()
         {
             if (!Request.IsAuthenticated)
             {
@@ -59,7 +60,6 @@ namespace dmMoWizz.Controllers
                 {
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
-                    PersonalRate = "0",
                     Title = movie.title,
                     BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
                     PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
@@ -68,7 +68,6 @@ namespace dmMoWizz.Controllers
 
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
             List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
-            //recommendedMovies.Sort((x, y) => y.Value.CompareTo(x.Value));
             foreach (var recommendation in recommendedMovies.Take(8).ToList())
             {
                 var movie = recommendation.Movie;
@@ -92,10 +91,9 @@ namespace dmMoWizz.Controllers
                 {
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
-                    PersonalRate = "0",
                     Title = movie.title,
-                    BackdropPath = movie.backdrop_path,
-                    PosterPath = movie.poster_path
+                    BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
+                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
                 });
             }
 
@@ -106,30 +104,24 @@ namespace dmMoWizz.Controllers
             return View("AuthenticatedHome", model);
         }
 
-        public ActionResult MoreSuggestedMovies()
+        public async Task<ActionResult> MoreSuggestedMovies()
         {
-            //TODO implement logic
-
-            //TEST DATA
             var model = new List<HomePageMovieViewModel>();
 
-            var names = new string[]{"The Young Hedgehog", "Hedgehog Growing Up", "Hedgehog Fighting For Freedom", "Wild Hedgehogs",
-                "Hedgehogs Land", "Hedgehogs Taking Space", "The Hedgehog King", "Hedgehog In The War Of Love",
-                "Hedgehog and the Lobster", "Heavy Hedgehog", "The Hedgehogs Cars", "Over The Hedge"};
-
-            for (int i = 0; i < 8; ++i)
+            var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
+            foreach (var recommendation in recommendedMovies.Skip(8).Take(8).ToList())
             {
-                var movie = new HomePageMovieViewModel
+                var movie = recommendation.Movie;
+                model.Add(new HomePageMovieViewModel
                 {
-                    AverageRate = "7.8",
-                    Overview = "A movie of freedom and stupidity.",
-                    PersonalRate = ((float)i / 8 * 100).ToString() + "%",
-                    Title = names[i],
-                    BackdropPath = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
-                    PosterPath = "http://image.tmdb.org/t/p/w500//oYtkKiYx4ca1B8VvE8jxKCU7iN0.jpg"
-                };
-
-                model.Add(movie);
+                    AverageRate = movie.vote_average.ToString(),
+                    Overview = movie.overview,
+                    PersonalRate = recommendation.Rating.ToString(),
+                    Title = movie.title,
+                    BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
+                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
+                });
             }
 
             return PartialView("MoreSuggestedMovies", model);

@@ -38,7 +38,7 @@ namespace dmMoWizz.Repositories
             return _usersCollection.Find(u => u.Id.Equals(id)).FirstOrDefault();
         }
 
-        public async void Update(UserInfo user)
+        public async System.Threading.Tasks.Task Update(UserInfo user)
         {
             var filter = Builders<UserInfo>.Filter.Eq(u => u.Id, user.Id);
 

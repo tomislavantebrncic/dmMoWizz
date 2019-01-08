@@ -1,5 +1,6 @@
 ﻿using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
+using dmMoWizz.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -14,8 +15,8 @@ namespace dmMoWizz.Controllers
     public class UserController : Controller
     {
         private ApplicationUserManager _userManager;
-        private UserRepository _usersRepository;
-        private MoviesRepository _moviesRepository;
+
+        private UserService _userService;
 
         public ApplicationUserManager UserManager
         {
@@ -31,8 +32,7 @@ namespace dmMoWizz.Controllers
 
         public UserController()
         {
-            _usersRepository = new UserRepository();
-            _moviesRepository = new MoviesRepository();
+            _userService = new UserService();
         }
 
         // GET: User
@@ -42,32 +42,19 @@ namespace dmMoWizz.Controllers
         }
 
         [HttpPost]
-        public void AddToWatchlist(int id)
+        public async System.Threading.Tasks.Task AddToWatchlist(int id)
         {
             var applicationUser = UserManager.FindById(User.Identity.GetUserId());
-            var userInfo = _usersRepository.Get(applicationUser.Id);
 
-            userInfo.AddToWatchlist(id);
-
-            _usersRepository.Update(userInfo);
+            await _userService.AddToWatchlistAsync(applicationUser.Id, id);
         }
 
-
         [HttpPost]
-        public void Rate(int movieId, int rating)
+        public async System.Threading.Tasks.Task Rate(int movieId, int rating)
         {
             var applicationUser = UserManager.FindById(User.Identity.GetUserId());
-            var userInfo = _usersRepository.Get(applicationUser.Id);
 
-            int incRating = rating;
-            int incCount = 1;
-            if (userInfo.IsRatedMovie(movieId))
-            {
-                incCount = 0;
-                incRating -= userInfo.Ratings.First(mr => mr.MovieId == movieId).Rating;
-            }
-
-            _moviesRepository.UpdateRating(movieId, incRating, incCount);
+            await _userService.RateAsync(applicationUser.Id, movieId, rating);
         }
 
         public ActionResult Watchlist()
