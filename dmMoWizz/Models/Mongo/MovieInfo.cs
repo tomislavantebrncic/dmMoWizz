@@ -144,6 +144,18 @@ namespace dmMoWizz.Models.Mongo
         public MovieImages images { get; set; }
         public List<Rating> Ratings { get; set; }
         public AppRating AppRating { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var info = obj as MovieInfo;
+            return info != null &&
+                   id == info.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1877310944 + id.GetHashCode();
+        }
     }
 
     public class Rating
@@ -175,4 +187,5 @@ namespace dmMoWizz.Models.Mongo
         public int width { get; set; }
         public int vote_count { get; set; }
     }
+
 }

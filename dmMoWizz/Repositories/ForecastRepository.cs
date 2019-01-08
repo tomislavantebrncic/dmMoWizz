@@ -1,4 +1,5 @@
 ﻿using dmMoWizz.Models;
+using dmMoWizz.Models.Mongo;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

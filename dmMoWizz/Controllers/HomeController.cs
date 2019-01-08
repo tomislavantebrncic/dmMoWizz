@@ -1,4 +1,5 @@
 ﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Models.Recommendations;
 using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
 using dmMoWizz.Services;
@@ -50,9 +51,6 @@ namespace dmMoWizz.Controllers
             }
 
             var model = new HomePageViewModel();
-            // TODO fill model
-            //popular i suggested napuniti sa 8 filmova sortirati
-            //sugested sortirati po personalrate a ostalo po average rate
 
             var movies = _movieService.GetPopular(8);
             foreach (MovieInfo movie in movies)
@@ -69,31 +67,21 @@ namespace dmMoWizz.Controllers
             }
 
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
-            List<KeyValuePair<string, int>> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
-            recommendedMovies.Sort((x, y) => y.Value.CompareTo(x.Value));
-            int count = 0;
-            foreach (var rm in recommendedMovies.ToList())
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
+            //recommendedMovies.Sort((x, y) => y.Value.CompareTo(x.Value));
+            foreach (var recommendation in recommendedMovies.Take(8).ToList())
             {
-                if (count == 8)
+                var movie = recommendation.Movie;
+                model.Suggested.Add(new HomePageMovieViewModel
                 {
-                    break;
-                }
-                var movie = _movieRepository.GetMovieFromTitle(rm.Key);
-                if (movie != null)
-                {
-                    count++;
-                    model.Suggested.Add(new HomePageMovieViewModel
-                    {
-                        AverageRate = movie.vote_average.ToString(),
-                        Overview = movie.overview,
-                        PersonalRate = rm.Value.ToString(),
-                        Title = movie.title,
-                        BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
-                        PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
-                    });
-                }
+                    AverageRate = movie.vote_average.ToString(),
+                    Overview = movie.overview,
+                    PersonalRate = recommendation.Rating.ToString(),
+                    Title = movie.title,
+                    BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
+                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
+                });
             }
-
 
             var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
             var sortedWatchlist = SortAndTakeNFirst(user.Watchlist, 4);
@@ -143,7 +131,6 @@ namespace dmMoWizz.Controllers
 
                 model.Add(movie);
             }
-            //zakomentirati ili obrisati test data
 
             return PartialView("MoreSuggestedMovies", model);
         }

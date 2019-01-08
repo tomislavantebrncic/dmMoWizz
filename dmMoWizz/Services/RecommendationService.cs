@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Models.SocialMedia.Facebook;
+﻿using dmMoWizz.Models.Recommendations;
+using dmMoWizz.Models.SocialMedia.Facebook;
 using dmMoWizz.Repositories;
 using System;
 using System.Collections.Concurrent;
@@ -32,6 +33,8 @@ namespace dmMoWizz.Services
             string url = String.Format(
                 urlString, accessToken.Value);
 
+            System.Diagnostics.Debug.WriteLine(url);
+
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             request.Method = "GET";
 
@@ -47,47 +50,110 @@ namespace dmMoWizz.Services
             }
         }
 
-        public async Task<List<KeyValuePair<string, int>>> GetRecommendations(IList<System.Security.Claims.Claim> currentClaims)
+        public async Task<List<Recommendation>> GetRecommendations(IList<System.Security.Claims.Claim> currentClaims)
         {
             return GetRecommendations(await GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}"));
         }
 
-        public List<KeyValuePair<string, int>> GetRecommendations(Info info)
+        public List<Recommendation> GetRecommendations(Info info)
         {
-            ConcurrentDictionary<string, int> similars = new ConcurrentDictionary<string, int>();
+            #region Similars and myLikes
+            List<Recommendation> similars = new List<Recommendation>();
+            List<Recommendation> myLikes = new List<Recommendation>();
             foreach (var movie in info.Likes.Data)
             {
                 var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
                 if (movieInfo != null)
                 {
-                    System.Diagnostics.Debug.WriteLine(movieInfo.title);
+                    myLikes.Add(new Recommendation
+                    {
+                        Movie = movieInfo,
+                        Rating = 1
+                    });
+
                     foreach (var hit in movieInfo.similar.results)
                     {
-                        var t = hit.title;
-                        similars.AddOrUpdate(t, 1, (id, count) => count + 1);
+                        var similarMovieInfo = _moviesRepository.GetMovieFromTitle(hit.title);
+                        if (similarMovieInfo != null)
+                        {
+                            var recommendation = new Recommendation
+                            {
+                                Movie = similarMovieInfo,
+                                Rating = 1
+                            };
+
+                            var recommendedMovie = similars.FirstOrDefault(r => r.Equals(recommendation));
+                            if (recommendedMovie == null)
+                            {
+                                similars.Add(recommendation);
+                            }
+                            else
+                            {
+                                recommendedMovie.Update(1);
+                            }
+                        }
                     }
                 }
             }
+            #endregion
 
-            ConcurrentDictionary<string, int> friendsSimilars = new ConcurrentDictionary<string, int>();
+            List<Recommendation> friendsSimilars = new List<Recommendation>();
             foreach (var friend in info.Friends.Data)
             {
                 foreach (var movie in friend.Likes.Data)
                 {
-                    var t = movie.Name;
-                    friendsSimilars.AddOrUpdate(t, 1, (id, count) => count + 1);
+                    var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
+                    if (movieInfo != null)
+                    {
+                        var recommendation = new Recommendation
+                        {
+                            Movie = movieInfo,
+                            Rating = 1
+                        };
+
+                        var recommendedMovie = friendsSimilars.FirstOrDefault(r => r.Equals(recommendation));
+                        if (recommendedMovie == null)
+                        {
+                            friendsSimilars.Add(recommendation);
+                        } else
+                        {
+                            recommendedMovie.Update(1);
+                        }
+                    }
                 }
             }
 
-            foreach (var pair in friendsSimilars)
+            foreach (var recommendation in friendsSimilars)
             {
-                similars.AddOrUpdate(pair.Key, pair.Value, (id, count) => count + pair.Value * 2);
+                var recMy = myLikes.FirstOrDefault(r => r.Equals(recommendation));
+                if (recMy != null)
+                {
+                    recMy.Update(recommendation.Rating * 2);
+                }
+
+                var recSim = similars.FirstOrDefault(r => r.Equals(recommendation));
+                if (recSim != null)
+                {
+                    recSim.Update(recommendation.Rating * 2);
+                }
             }
 
-            var sorted = similars.ToList();
-            sorted.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+            foreach (var recommendation in myLikes)
+            {
+                var recSim = similars.FirstOrDefault(r => r.Equals(recommendation));
+                if (recSim != null)
+                {
+                    recSim.Update(recommendation.Rating);
+                }
+                else
+                {
+                    similars.Add(recommendation);
+                }
+            }
 
-            return sorted;
+            similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
+
+            return similars;
         }
     }
 }

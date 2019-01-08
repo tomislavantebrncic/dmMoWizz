@@ -230,6 +230,7 @@
     <Compile Include="Models\Mongo\MovieInfo.cs" />
     <Compile Include="Models\Mongo\UserInfo.cs" />
     <Compile Include="Models\OpenWeatherMapResponse.cs" />
+    <Compile Include="Models\Recommendations\Recommendation.cs" />
     <Compile Include="Models\SocialMedia\Facebook\Info.cs" />
     <Compile Include="Models\TMDB\TMDBPopularMoviesResponse.cs" />
     <Compile Include="Models\ViewModels\HomePageViewModel.cs" />
