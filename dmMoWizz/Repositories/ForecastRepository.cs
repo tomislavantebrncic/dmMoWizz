@@ -15,8 +15,8 @@ namespace dmMoWizz.Repositories
 
         public ForecastsRepository()
         {
-            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["MongoDatabaseHost"]);
-            IMongoDatabase database = client.GetDatabase(ConfigurationManager.AppSettings["MongoDatabaseName"]);
+            MongoClient client = new MongoClient("mongodb://localhost:27017");
+            IMongoDatabase database = client.GetDatabase("dm-mowizz");
             forecastsCollection = database.GetCollection<Forecast>("forecasts");
         }
 

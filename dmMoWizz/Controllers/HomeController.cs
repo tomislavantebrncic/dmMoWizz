@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Models.Mongo;
+﻿using dmMoWizz.DataFetchers;
+using dmMoWizz.Models.Mongo;
 using dmMoWizz.Models.Recommendations;
 using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
@@ -54,6 +55,9 @@ namespace dmMoWizz.Controllers
             var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
 
             var model = new HomePageViewModel();
+
+            Forecast forecast = ForecastDataFetcher.getForecast("Zagreb");
+            model.Forecast = forecast.Data[0].Main;
 
             var movies = _movieService.GetPopular(8);
             foreach (MovieInfo movie in movies)

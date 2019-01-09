@@ -58,7 +58,7 @@ namespace dmMoWizz.DataFetchers
 
         public static Forecast getForecast(string city)
         {
-            int updateInterval = int.Parse(ConfigurationManager.AppSettings["ForecastUpdateInterval"]);
+            int updateInterval = 15;
 
             ForecastsRepository forecastsCollectionController = new ForecastsRepository();
             Forecast forecast = forecastsCollectionController.getForecast(city);

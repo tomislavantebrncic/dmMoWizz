@@ -21,6 +21,14 @@
     </nav>
 </div>
 
+@if (Model.Forecast.CompareTo("Clear") == 0 || Model.Forecast.CompareTo("Clouds") == 0)
+{
+    <script>
+        window.onload = function () {
+            alert("Trenutna prognoza je dobro vrijeme!")
+        }
+    </script>
+}
 
 <div class="carousel carousel-slider center" style="height:500px">
     @foreach (var movie in Model.Popular.Take(5))
