@@ -67,19 +67,9 @@ namespace dmMoWizz.Repositories
 
         public MovieInfo GetMovieFromTitle(string title)
         {
-            System.Diagnostics.Debug.WriteLine("Tražim: " + title);
-
             var filter = Builders<MovieInfo>.Filter.Regex(m => m.title, new MongoDB.Bson.BsonRegularExpression(title, "i"));
 
-            var mi = _moviesCollection.Find(filter).FirstOrDefault();
-
-            if (mi != null)
-            {
-                System.Diagnostics.Debug.WriteLine("Našao: " + mi.title);
-            }
-
-            return mi;
-            return _moviesCollection.Find(m => m.title.ToLower().Equals(title.ToLower())).FirstOrDefault();
+            return _moviesCollection.Find(filter).FirstOrDefault();
         }
 
         public void UpdateRating(int movieId, int incRating, int incCount)

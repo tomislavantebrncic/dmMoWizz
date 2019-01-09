@@ -1,7 +1,9 @@
-﻿using dmMoWizz.Repositories;
+﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace dmMoWizz.Services
@@ -17,7 +19,12 @@ namespace dmMoWizz.Services
             _moviesRepository = new MoviesRepository();
         }
 
-        public async System.Threading.Tasks.Task AddToWatchlistAsync(string id, int movieId)
+        public UserInfo GetUserInfo(string id)
+        {
+            return _usersRepository.Get(id);
+        }
+
+        public async Task AddToWatchlistAsync(string id, int movieId)
         {
             var userInfo = _usersRepository.Get(id);
 
@@ -26,7 +33,16 @@ namespace dmMoWizz.Services
             await _usersRepository.Update(userInfo);
         }
 
-        public async System.Threading.Tasks.Task RateAsync(string id, int movieId, int rating)
+        public async Task RemoveFromWatchlistAsync(string id, int movieId)
+        {
+            var userInfo = _usersRepository.Get(id);
+
+            userInfo.RemoveFromWatchlist(movieId);
+
+            await _usersRepository.Update(userInfo);
+        }
+
+        public async Task RateAsync(string id, int movieId, int rating)
         {
             var userInfo = _usersRepository.Get(id);
 

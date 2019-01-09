@@ -51,6 +51,8 @@ namespace dmMoWizz.Controllers
                 return View();
             }
 
+            var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
+
             var model = new HomePageViewModel();
 
             var movies = _movieService.GetPopular(8);
@@ -74,7 +76,7 @@ namespace dmMoWizz.Controllers
                 model.Suggested.Add(new HomePageMovieViewModel
                 {
                     Id = movie.id,
-                    //TODO fill addedToWatchlist
+                    AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     PersonalRate = recommendation.Rating.ToString(),
@@ -84,7 +86,6 @@ namespace dmMoWizz.Controllers
                 });
             }
 
-            var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
             var sortedWatchlist = SortAndTakeNFirst(user.Watchlist, 4);
             foreach (WatchlistMovie w in sortedWatchlist)
             {

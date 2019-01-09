@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Models.ViewModels;
+﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
 using dmMoWizz.Services;
 using Microsoft.AspNet.Identity;
@@ -6,6 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -15,6 +17,8 @@ namespace dmMoWizz.Controllers
     public class UserController : Controller
     {
         private ApplicationUserManager _userManager;
+
+        private MoviesRepository _moviesRepository;
 
         private UserService _userService;
 
@@ -32,6 +36,8 @@ namespace dmMoWizz.Controllers
 
         public UserController()
         {
+            _moviesRepository = new MoviesRepository();
+
             _userService = new UserService();
         }
 
@@ -42,15 +48,23 @@ namespace dmMoWizz.Controllers
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task AddToWatchlist(int id)
+        public async Task AddToWatchlist(int id)
         {
             var applicationUser = UserManager.FindById(User.Identity.GetUserId());
 
             await _userService.AddToWatchlistAsync(applicationUser.Id, id);
         }
+        [HttpPost]
+        public async Task RemoveFromWatchlist(int id)
+        {
+            var applicationUser = UserManager.FindById(User.Identity.GetUserId());
+
+            await _userService.RemoveFromWatchlistAsync(applicationUser.Id, id);
+        }
+
 
         [HttpPost]
-        public async System.Threading.Tasks.Task Rate(int movieId, int rating)
+        public async Task Rate(int movieId, int rating)
         {
             var applicationUser = UserManager.FindById(User.Identity.GetUserId());
 
@@ -60,58 +74,38 @@ namespace dmMoWizz.Controllers
         public ActionResult Watchlist()
         {
             var model = new List<WatchlistItemViewModel>();
-            model.Add(new WatchlistItemViewModel
+
+            var userInfo = _userService.GetUserInfo(User.Identity.GetUserId());
+
+            foreach (var watchlistMovie in userInfo.Watchlist)
             {
-                Title = "The Great Fall",
-                AverageVote = "7.6",
-                Id = "7",
-                Overview = "The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time.",
-                PosterURL = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
-                Year = "2010",
-                PersonalRate = "77%",
-                Cast = new List<CastPersonViewModel> { new CastPersonViewModel {
-                        Character = "Mahthilda",
-                        Name = "Jennifer Lawrence",
-                        Order = 1
-                    },
-                    new CastPersonViewModel {
-                        Character = "Adrianne",
-                        Name = "Kate Olsen",
-                        Order = 2
-                    },
-                    new CastPersonViewModel {
-                        Character = "John",
-                        Name = "Michael Douglas",
-                        Order = 3
-                    },
+                var movieInfo = _moviesRepository.GetMovie(watchlistMovie.Id);
+
+                var cast = new List<CastPersonViewModel>();
+                foreach (Cast castPerson in movieInfo.credits.cast)
+                {
+                    cast.Add(new CastPersonViewModel
+                    {
+                        Character = castPerson.character,
+                        Name = castPerson.name,
+                        Order = castPerson.order
+                    });
                 }
-            });
-            model.Add(new WatchlistItemViewModel
-            {
-                Title = "The Great Fall",
-                AverageVote = "7.6",
-                Id = "7",
-                Overview = "The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time. The movie about fall one of the greatest emperors of all time.",
-                PosterURL = "http://image.tmdb.org/t/p/w500//nJXlYXjbnno6tBDHqiW6ohkCrzQ.jpg",
-                Year = "2010",
-                PersonalRate = "77%",
-                Cast = new List<CastPersonViewModel> { new CastPersonViewModel {
-                        Character = "Mahthilda",
-                        Name = "Jennifer Lawrence",
-                        Order = 1
-                    },
-                    new CastPersonViewModel {
-                        Character = "Adrianne",
-                        Name = "Kate Olsen",
-                        Order = 2
-                    },
-                    new CastPersonViewModel {
-                        Character = "John",
-                        Name = "Michael Douglas",
-                        Order = 3
-                    },
-                }
-            });
+
+                model.Add(new WatchlistItemViewModel
+                {
+                    Id = movieInfo.id.ToString(),
+                    Title = movieInfo.title,
+                    AverageVote = movieInfo.vote_average.ToString(),
+                    Overview = movieInfo.overview,
+                    PosterURL = "http://image.tmdb.org/t/p/w500/" + movieInfo.poster_path,
+                    Year = movieInfo.release_date.Split('-')[0],
+                    // TO DO
+                    PersonalRate = "0%",
+                    Cast = cast
+                });
+            }
+
             return View(model);
         }
     }

@@ -34,6 +34,11 @@ namespace dmMoWizz.Models.Mongo
         {
             return Ratings.FirstOrDefault(r => r.MovieId == movieId) != null;
         }
+
+        public bool RemoveFromWatchlist(int id)
+        {
+            return Watchlist.RemoveWhere(w => w.Id == id) != 0;
+        }
     }
 
     public class MovieRating

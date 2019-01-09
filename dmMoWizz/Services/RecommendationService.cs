@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Models.Recommendations;
+﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Models.Recommendations;
 using dmMoWizz.Models.SocialMedia.Facebook;
 using dmMoWizz.Repositories;
 using System;
@@ -57,7 +58,6 @@ namespace dmMoWizz.Services
 
         public List<Recommendation> GetRecommendations(Info info)
         {
-            #region Similars and myLikes
             List<Recommendation> similars = new List<Recommendation>();
             List<Recommendation> myLikes = new List<Recommendation>();
             foreach (var movie in info.Likes.Data)
@@ -71,31 +71,9 @@ namespace dmMoWizz.Services
                         Rating = 1
                     });
 
-                    foreach (var hit in movieInfo.similar.results)
-                    {
-                        var similarMovieInfo = _moviesRepository.GetMovieFromTitle(hit.title);
-                        if (similarMovieInfo != null)
-                        {
-                            var recommendation = new Recommendation
-                            {
-                                Movie = similarMovieInfo,
-                                Rating = 1
-                            };
-
-                            var recommendedMovie = similars.FirstOrDefault(r => r.Equals(recommendation));
-                            if (recommendedMovie == null)
-                            {
-                                similars.Add(recommendation);
-                            }
-                            else
-                            {
-                                recommendedMovie.Update(1);
-                            }
-                        }
-                    }
+                    FillSimilars(similars, movieInfo);
                 }
             }
-            #endregion
 
             List<Recommendation> friendsSimilars = new List<Recommendation>();
             foreach (var friend in info.Friends.Data)
@@ -103,23 +81,7 @@ namespace dmMoWizz.Services
                 foreach (var movie in friend.Likes.Data)
                 {
                     var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
-                    if (movieInfo != null)
-                    {
-                        var recommendation = new Recommendation
-                        {
-                            Movie = movieInfo,
-                            Rating = 1
-                        };
-
-                        var recommendedMovie = friendsSimilars.FirstOrDefault(r => r.Equals(recommendation));
-                        if (recommendedMovie == null)
-                        {
-                            friendsSimilars.Add(recommendation);
-                        } else
-                        {
-                            recommendedMovie.Update(1);
-                        }
-                    }
+                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo);
                 }
             }
 
@@ -155,5 +117,55 @@ namespace dmMoWizz.Services
 
             return similars;
         }
+
+        public List<Recommendation> GetWatchlistRecommendations(UserInfo userInfo)
+        {
+            List<Recommendation> similars = new List<Recommendation>();
+
+            foreach (var watchlistMovie in userInfo.Watchlist)
+            {
+                var movieInfo = _moviesRepository.GetMovie(watchlistMovie.Id);
+
+                FillSimilars(similars, movieInfo);
+            }
+
+            similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
+
+            return similars;
+        }
+
+
+        #region Helper Methods
+        private void FillSimilars(List<Recommendation> similars, MovieInfo movieInfo)
+        {
+            foreach (var hit in movieInfo.similar.results)
+            {
+                var similarMovieInfo = _moviesRepository.GetMovieFromTitle(hit.title);
+                UpdateRecommendationsForMovie(similars, similarMovieInfo);
+            }
+        }
+
+        private void UpdateRecommendationsForMovie(List<Recommendation> recommendations, MovieInfo movieInfo)
+        {
+            if (movieInfo != null)
+            {
+                var recommendation = new Recommendation
+                {
+                    Movie = movieInfo,
+                    Rating = 1
+                };
+
+                var recommendedMovie = recommendations.FirstOrDefault(r => r.Equals(recommendation));
+                if (recommendedMovie == null)
+                {
+                    recommendations.Add(recommendation);
+                }
+                else
+                {
+                    recommendedMovie.Update(1);
+                }
+            }
+        }
+        #endregion
     }
 }
