@@ -100,7 +100,7 @@ namespace dmMoWizz.Controllers
                 });
             }
 
-            model.Suggested = model.Suggested.OrderByDescending(x => x.PersonalRate).ToList();
+            //model.Suggested = model.Suggested.OrderByDescending(x => x.PersonalRate).ToList();
             model.Popular = model.Popular.OrderByDescending(x => x.AverageRate).ToList();
             //model.Watchlist = model.Watchlist.OrderByDescending(x => x.AverageRate).ToList();
 

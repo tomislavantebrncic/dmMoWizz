@@ -81,7 +81,7 @@ namespace dmMoWizz.Services
                 foreach (var movie in friend.Likes.Data)
                 {
                     var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
-                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo);
+                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo, 1);
                 }
             }
 
@@ -138,21 +138,23 @@ namespace dmMoWizz.Services
         #region Helper Methods
         private void FillSimilars(List<Recommendation> similars, MovieInfo movieInfo)
         {
+            double val = 5;
             foreach (var hit in movieInfo.similar.results)
             {
                 var similarMovieInfo = _moviesRepository.GetMovieFromTitle(hit.title);
-                UpdateRecommendationsForMovie(similars, similarMovieInfo);
+                UpdateRecommendationsForMovie(similars, similarMovieInfo, val);
+                val -= 0.25;
             }
         }
 
-        private void UpdateRecommendationsForMovie(List<Recommendation> recommendations, MovieInfo movieInfo)
+        private void UpdateRecommendationsForMovie(List<Recommendation> recommendations, MovieInfo movieInfo, double val)
         {
             if (movieInfo != null)
             {
                 var recommendation = new Recommendation
                 {
                     Movie = movieInfo,
-                    Rating = 1
+                    Rating = val
                 };
 
                 var recommendedMovie = recommendations.FirstOrDefault(r => r.Equals(recommendation));
@@ -162,7 +164,7 @@ namespace dmMoWizz.Services
                 }
                 else
                 {
-                    recommendedMovie.Update(1);
+                    recommendedMovie.Update(val);
                 }
             }
         }
