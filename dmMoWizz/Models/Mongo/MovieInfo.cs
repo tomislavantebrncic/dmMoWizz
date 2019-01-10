@@ -144,6 +144,7 @@ namespace dmMoWizz.Models.Mongo
         public MovieImages images { get; set; }
         public List<Rating> Ratings { get; set; }
         public AppRating AppRating { get; set; }
+        public List<Song> Soundtrack { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -156,6 +157,21 @@ namespace dmMoWizz.Models.Mongo
         {
             return 1877310944 + id.GetHashCode();
         }
+    }
+
+    public class Song
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string TunefindUrl { get; set; }
+        public Artist Artist { get; set; }
+    }
+
+    public class Artist
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string TunefindUrl { get; set; }
     }
 
     public class Rating
