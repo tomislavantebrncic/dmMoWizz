@@ -1,0 +1,55 @@
+﻿@model dmMoWizz.Models.ViewModels.SummaryViewModel
+<div>
+    <div style="margin:-24px; height:400px; filter:grayscale(100%); background-image:url(@Model.Backdrop); background-size:cover; background-position:center">
+    </div>
+    <div style="padding-top:49px">
+        <div class="row">
+            <div class="col s8">
+                <h4>@Model.Title (@Model.Year)</h4>
+            </div>
+            <div class="col s2">
+                <div class="center-align">
+                    <div class="valign-wrapper">
+                        <i class="material-icons" style="color:#26a69a; font-size:3rem">star</i>
+                        <span style="font-weight:bold; color:#26a69a">@Model.AverageVote</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div class="valign-wrapper">
+                    <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                    <span style="font-weight:bold; color:#26a69a; margin-left:15px">@Model.PersonalRate</span>
+                </div>
+            </div>
+        </div>
+        @if(Model.Cast != null)
+        {
+        <p style="font-style:italic">@String.Join(", ", Model.Cast.Select(x => x.Name))</p>
+        }
+        <p>@Model.Overview</p>
+        <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@Model.Id">
+            See more...
+        </a>
+    </div>
+    <div>
+        <div class="right-align">
+            <a class="waves-effect waves-light btn addtowatchlist" data-id="@Model.Id"><i class="material-icons left">add_to_queue</i>Add To Watchlist</a>
+        </div>
+    </div>
+</div>
+<script>
+    $('.addtowatchlist').click(function () {
+        var element = $(this);
+        var id = $(this).attr("data-id")
+        $.ajax({
+            type: "POST",
+            url: "/user/addtowatchlist?id=" + id,
+            data: id,
+            success: function () {
+                element.fadeOut();
+                element.next().fadeIn();
+                M.toast({ html: 'Added to watchlist.' })
+            },
+        });
+    });
+</script>

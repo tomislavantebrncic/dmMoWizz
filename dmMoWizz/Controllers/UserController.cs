@@ -74,23 +74,24 @@ namespace dmMoWizz.Controllers
         public ActionResult Watchlist()
         {
             var model = new List<WatchlistItemViewModel>();
-
-            var userInfo = _userService.GetUserInfo(User.Identity.GetUserId());
+            var applicationUser = UserManager.FindById(User.Identity.GetUserId());
+            var userInfo = _userService.GetUserInfo(applicationUser.Id);
 
             foreach (var watchlistMovie in userInfo.Watchlist)
             {
                 var movieInfo = _moviesRepository.GetMovie(watchlistMovie.Id);
 
                 var cast = new List<CastPersonViewModel>();
-                foreach (Cast castPerson in movieInfo.credits.cast)
-                {
-                    cast.Add(new CastPersonViewModel
+                if (movieInfo.credits != null && movieInfo.credits.cast != null)
+                    foreach (Cast castPerson in movieInfo.credits.cast)
                     {
-                        Character = castPerson.character,
-                        Name = castPerson.name,
-                        Order = castPerson.order
-                    });
-                }
+                        cast.Add(new CastPersonViewModel
+                        {
+                            Character = castPerson.character,
+                            Name = castPerson.name,
+                            Order = castPerson.order
+                        });
+                    }
 
                 model.Add(new WatchlistItemViewModel
                 {

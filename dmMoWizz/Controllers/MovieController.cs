@@ -32,17 +32,23 @@ namespace dmMoWizz.Controllers
             {
                 return View("Error");
             }
+            //TODO fill model
             var model = new MovieDetailsViewModel
             {
+                Overview = movieInfo.overview,
+                Id = movieInfo.id,
+                BackdropPath = movieInfo.backdrop_path,
+                ReleaseDate = movieInfo.release_date,
+                Tagline = movieInfo.tagline,
+                PosterPath = movieInfo.poster_path,
+                Revenue = movieInfo.revenue.ToString(),
+                Title = movieInfo.title,
+                VoteAverage = movieInfo.vote_average.ToString(),
+                VoteCount = movieInfo.vote_count,
                 Budget = movieInfo.budget.ToString(),
                 OriginalTitle = movieInfo.title,
                 Popularity = movieInfo.popularity.ToString()
             };
-
-            //model.Budget = "15574737";
-            //model.OriginalTitle = "test film";
-            //model.Popularity = "5";
-            //remove later
 
             return View(model);
         }
@@ -79,6 +85,18 @@ namespace dmMoWizz.Controllers
             }
 
             return View("Search", model);
+        }
+
+        public ActionResult Summary(int movieId)
+        {
+            var model = new SummaryViewModel
+            {
+                Id = 4,
+                AverageVote = "4.5",
+                PersonalRate = "76%",
+            };
+
+            return PartialView("Summary", model);
         }
     }
 }

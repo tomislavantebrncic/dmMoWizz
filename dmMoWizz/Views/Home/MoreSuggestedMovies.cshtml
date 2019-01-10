@@ -7,7 +7,16 @@
                 <div class="card-image">
                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                     <span class="card-title">@movie.Title</span>
-                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                    @if (!movie.AddedToWatchlist)
+                    {
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                    }
+                    else
+                    {
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
+                    }
                 </div>
                 <div class="card-content">
                     @*<p>@movie.Overview</p>*@
@@ -35,7 +44,16 @@
                 <div class="card-image">
                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                     <span class="card-title">@movie.Title</span>
-                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                    @if (!movie.AddedToWatchlist)
+                    {
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                    }
+                    else
+                    {
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
+                    }
                 </div>
                 <div class="card-content">
                     @*<p>@movie.Overview</p>*@
@@ -55,3 +73,36 @@
         </div>
     }
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.addtowatchlist').click(function () {
+            var element = $(this);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/addtowatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut();
+                    element.next().fadeIn();
+                    M.toast({ html: 'Added to watchlist.' })
+                },
+            });
+        });
+        $('.removefromwatchlist').click(function () {
+            var element = $(this);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/removefromWatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut();
+                    element.prev().fadeIn();
+                    M.toast({ html: 'Removed from watchlist.' })
+                },
+            });
+        });
+    }
+</script>

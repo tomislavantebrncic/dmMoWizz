@@ -25,10 +25,10 @@
 <div class="carousel carousel-slider center" style="height:500px">
     @foreach (var movie in Model.Popular.Take(5))
     {
-        <div class="carousel-item white-text" style="filter:grayscale(100%); background-image:url(@movie.PosterPath); background-size:cover; background-position:center">
-            @*<h2>@movie.Title</h2>
-                <p class="white-text">@movie.AverageRate</p>*@
+        <div class="carousel-item white-text" style="filter:grayscale(100%); background-image:url(@movie.BackdropPath); background-size:cover; background-position:center">
+            @*<p class="white-text">@movie.AverageRate</p>*@
         </div>
+        <h2 style="background-color:#4db6ac; position:absolute; top:300px; left:50px" id="headline-title"></h2>
     }
 </div>
 
@@ -45,17 +45,19 @@
                     @foreach (var movie in Model.Suggested.Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
                                     @if (!movie.AddedToWatchlist)
                                     {
                                         <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
                                     }
                                     else
                                     {
-                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2" data-position="bottom" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
                                     }
                                 </div>
                                 <div class="card-content">
@@ -80,11 +82,20 @@
                     @foreach (var movie in Model.Suggested.Skip(4).Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                                    @if (!movie.AddedToWatchlist)
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
+                                    }
                                 </div>
                                 <div class="card-content">
                                     @*<p>@movie.Overview</p>*@
@@ -137,7 +148,14 @@
                                     @*<a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Remove from watchlist"><i class="material-icons">add_to_queue</i></a>*@
                                 </div>
                                 <div class="card-content">
-                                    <p>@movie.Overview</p>
+                                    @if (movie.Overview.Length > 150)
+                                    {
+                                        <p>@movie.Overview.Substring(0, 150) ...</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@movie.Overview</p>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -166,10 +184,26 @@
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                    @if (!movie.AddedToWatchlist)
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
+                                    }
                                 </div>
                                 <div class="card-content">
-                                    <p>@movie.Overview</p>
+                                    @if (movie.Overview.Length > 150)
+                                    {
+                                        <p>@movie.Overview.Substring(0, 150) ...</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@movie.Overview</p>
+                                    }
                                     <div class="center-align">
                                         <div class="valign-wrapper">
                                             <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">star</i>
@@ -189,10 +223,26 @@
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="Add to watchlist"><i class="material-icons">add_to_queue</i></a>
+                                    @if (!movie.AddedToWatchlist)
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" style="display:none" data-position="bottom" data-id="@movie.Id" data-tooltip="Remove from watchlist"><i class="material-icons">remove_from_queue</i></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped addtowatchlist" data-position="bottom" data-tooltip="Add to watchlist" data-id="@movie.Id" style="display:none"><i class="material-icons">add_to_queue</i></a>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light btn tooltipped red accent-2 removefromwatchlist" data-position="bottom" data-tooltip="Remove from watchlist" data-id="@movie.Id"><i class="material-icons">remove_from_queue</i></a>
+                                    }
                                 </div>
                                 <div class="card-content">
-                                    <p>@movie.Overview</p>
+                                    @if (movie.Overview.Length > 150)
+                                    {
+                                        <p>@movie.Overview.Substring(0, 150) ...</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@movie.Overview</p>
+                                    }
                                     <div class="center-align">
                                         <div class="valign-wrapper">
                                             <i class="material-icons" style="color:#4db6ac; font-size:1.5rem">star</i>
@@ -209,9 +259,35 @@
     </div>
 }
 
+<div id="modal" class="modal">
+    <div class="modal-content" id="modal-content">
+        <h4>Modal Header</h4>
+        <p>A bunch of text</p>
+    </div>  
+</div>
+
 <script>
+
     $(document).ready(function () {
         $('.tooltipped').tooltip();
+        $('.card').click(function (e) {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                type: "POST",
+                url: "/movie/summary?movieid=" + id,
+                data: id,
+                success: function (response) {
+                    //console.log($('#modal-content'))
+                    //$('#modal').css("background-image", "url(http://image.tmdb.org/t/p/w500//fzfe2srDBAQLfvlYRpAACvwe39X.jpg)");
+                    //$('#modal').css("background-size", "cover");
+                    //$('#modal').css("background-position", "center");
+
+                    $('#modal-content').html(response);
+                    $('#modal').modal();
+                    $('#modal').modal('open');
+                },
+            });
+        })
         $('.addtowatchlist').click(function () {
             var element = $(this);
             var id = $(this).attr("data-id")
@@ -220,8 +296,23 @@
                 url: "/user/addtowatchlist?id=" + id,
                 data: id,
                 success: function () {
-                   element.fadeOut()
+                    element.fadeOut();
+                    element.next().fadeIn();
                     M.toast({ html: 'Added to watchlist.' })
+                },
+            });
+        });
+        $('.removefromwatchlist').click(function () {
+            var element = $(this);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/removefromWatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut();
+                    element.prev().fadeIn();
+                    M.toast({ html: 'Removed from watchlist.' })
                 },
             });
         });
