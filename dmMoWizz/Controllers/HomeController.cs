@@ -56,7 +56,17 @@ namespace dmMoWizz.Controllers
 
             var model = new HomePageViewModel();
 
-            Forecast forecast = ForecastDataFetcher.getForecast("Zagreb");
+            string ip = Request.UserHostAddress;
+            Location location;
+            if (ip.CompareTo("::1") == 0)
+            {
+                location = LocationDataFetcher.getLocation("141.136.186.230");
+            }
+            else
+            {
+                location = LocationDataFetcher.getLocation(ip);
+            }
+            Forecast forecast = ForecastDataFetcher.getForecast(location.CityName);
             model.Forecast = forecast.Data[0].Main;
 
             var movies = _movieService.GetPopular(8);
