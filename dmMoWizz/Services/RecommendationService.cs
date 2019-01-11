@@ -16,10 +16,26 @@ namespace dmMoWizz.Services
     public class RecommendationService
     {
         private readonly MoviesRepository _moviesRepository;
+        private static readonly Dictionary<int, double> _scores;
+
+        static RecommendationService()
+        {
+            _scores = new Dictionary<int, double>();
+        }
 
         public RecommendationService()
         {
             _moviesRepository = new MoviesRepository();
+        }
+
+        public double GetRecommendation(int movieId)
+        {
+            System.Diagnostics.Debug.WriteLine("Get: " + _scores.Count);
+            if (_scores.ContainsKey(movieId))
+            {
+                return _scores[movieId];
+            }
+            return -1;
         }
 
         public async Task<Info> GetInfoAsync(IList<System.Security.Claims.Claim> currentClaims, string urlString)
@@ -114,6 +130,12 @@ namespace dmMoWizz.Services
             }
 
             similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
+
+            foreach (var recommendation in similars)
+            {
+                System.Diagnostics.Debug.WriteLine("dodajem " + recommendation.Movie.id + " " + recommendation.Rating);
+                _scores[recommendation.Movie.id] = recommendation.Rating;
+            }
 
             return similars;
         }

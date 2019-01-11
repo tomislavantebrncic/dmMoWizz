@@ -101,6 +101,7 @@ namespace dmMoWizz.Controllers
                     Overview = movieInfo.overview,
                     PosterURL = "http://image.tmdb.org/t/p/w500/" + movieInfo.poster_path,
                     Year = movieInfo.release_date.Split('-')[0],
+                    AddedOnDate = watchlistMovie.DateAdded.ToShortDateString(),
                     // TO DO
                     PersonalRate = "0%",
                     Cast = cast
