@@ -210,38 +210,47 @@ namespace dmMoWizz.Controllers
             return View(model);
         }
 
-        public ActionResult FindMovieByName(string name)
+        public ActionResult Search()
         {
-            var movies = _moviesRepository.GetMovies(name);
+            var model = new SearchViewModel();
 
-            var model = new List<SearchResultViewModel>();
-
-            foreach (var movie in movies)
+            //TODO make call to service which will fetch genres
+            //TEST data
+            model.GenresDropdown.Add(new GenreViewModel
             {
-                var cast = new List<CastPersonViewModel>();
-                foreach (Cast castPerson in movie.credits.cast)
-                {
-                    cast.Add(new CastPersonViewModel
-                    {
-                        Character = castPerson.character,
-                        Name = castPerson.name,
-                        Order = castPerson.order
-                    });
-                }
-
-                model.Add(new SearchResultViewModel
-                {
-                    Title = movie.title,
-                    AverageVote = movie.vote_average.ToString(),
-                    Id = movie.id.ToString(),
-                    Overview = movie.overview,
-                    PosterURL = movie.poster_path,
-                    Year = movie.release_date.Split('-')[0],
-                    Cast = cast
-                });
-            }
+                Name = "Drama",
+                Id = 18
+            });
+            model.GenresDropdown.Add(new GenreViewModel
+            {
+                Name = "Horror",
+                Id = 27
+            });
 
             return View("Search", model);
+        }
+
+        [HttpPost]
+        public ActionResult Search(SearchViewModel model)
+        {
+            var result = new List<SearchResultViewModel>();
+
+            //TODO fill result
+
+            if (model.Sort == "name")
+            {
+                result.OrderBy(x => x.Title);
+            }
+            else if (model.Sort == "year")
+            {
+                result.OrderBy(x => x.Year);
+            }
+            else if (model.Sort == "rate")
+            {
+                result.OrderBy(x => x.AverageVote);
+            }
+
+            return PartialView("Search", result);
         }
 
         public ActionResult Summary(int movieId)

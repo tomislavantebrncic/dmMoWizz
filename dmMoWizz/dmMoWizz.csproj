@@ -237,6 +237,7 @@
     <Compile Include="Models\ViewModels\ImageViewModel.cs" />
     <Compile Include="Models\ViewModels\MovieDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\SearchViewModel.cs" />
     <Compile Include="Models\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Models\ViewModels\WatchlistItemViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,6 +14,7 @@ namespace dmMoWizz.Models.ViewModels
         public string AverageVote { get; set; }
         //short description
         public string Overview { get; set; }
+        public List<GenreViewModel> Genres { get; set; }
         //fill with a few 1-5 most important cast members
         public List<CastPersonViewModel> Cast {get; set; }
 
