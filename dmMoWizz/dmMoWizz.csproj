@@ -253,6 +253,13 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="css\all.min.css" />
+    <Content Include="css\background.css" />
+    <Content Include="css\bootstrap.min.css" />
+    <Content Include="css\device-mockups.min.css" />
+    <Content Include="css\grayscale.css" />
+    <Content Include="css\materialize.css" />
+    <Content Include="css\simple-line-icons.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
