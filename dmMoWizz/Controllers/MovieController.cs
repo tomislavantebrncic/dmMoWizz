@@ -258,7 +258,7 @@ namespace dmMoWizz.Controllers
                 Cast = cast.ToArray(),
                 AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movieInfo.id }),
                 Year = movieInfo.release_date.Split('-')[0],
-                Backdrop = "http://image.tmdb.org/t/p/w500/" + movieInfo.backdrop_path,
+                Backdrop = "http://image.tmdb.org/t/p/w1280/" + movieInfo.backdrop_path,
                 Overview = movieInfo.overview,
                 PersonalRate = _recommendationService.GetRecommendation(movieId).ToString()
             };

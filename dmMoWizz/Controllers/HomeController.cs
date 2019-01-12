@@ -63,8 +63,8 @@ namespace dmMoWizz.Controllers
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     Title = movie.title,
-                    BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
-                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
+                    BackdropPath = "http://image.tmdb.org/t/p/w1280/" + movie.backdrop_path,
+                    PosterPath = "http://image.tmdb.org/t/p/w1280/" + movie.poster_path
                 });
             }
 
