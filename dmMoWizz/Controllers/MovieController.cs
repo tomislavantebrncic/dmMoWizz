@@ -158,6 +158,21 @@ namespace dmMoWizz.Controllers
                 });
             }
 
+            var trailers = new List<TrailerViewModel>();
+            foreach (var trailer in movieInfo.videos.results.FindAll(v => v.type.Equals("Trailer")))
+            {
+                trailers.Add(new TrailerViewModel
+                {
+                    Id = trailer.id,
+                    Iso_3166_1 = trailer.iso_3166_1,
+                    Iso_639_1 = trailer.iso_639_1,
+                    Key = trailer.key,
+                    Name = trailer.name,
+                    Site = trailer.site,
+                    Size = trailer.size
+                });
+            }
+
             //TODO fill model
             var model = new MovieDetailsViewModel
             {
@@ -188,7 +203,8 @@ namespace dmMoWizz.Controllers
                 ProductionCompanies = companies.ToArray(),
                 ProductionCountries = countries.ToArray(),
                 SimilarMovies = similars.ToArray(),
-                SpokenLanguages = languages.ToArray()
+                SpokenLanguages = languages.ToArray(),
+                Trailers = trailers.ToArray()
             };
 
             return View(model);

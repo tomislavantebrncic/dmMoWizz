@@ -21,6 +21,7 @@ namespace dmMoWizz.Controllers
         private MoviesRepository _moviesRepository;
 
         private UserService _userService;
+        private RecommendationService _recommendationService;
 
         public ApplicationUserManager UserManager
         {
@@ -39,6 +40,7 @@ namespace dmMoWizz.Controllers
             _moviesRepository = new MoviesRepository();
 
             _userService = new UserService();
+            _recommendationService = new RecommendationService();
         }
 
         // GET: User
@@ -109,6 +111,19 @@ namespace dmMoWizz.Controllers
             }
 
             return View(model);
+        }
+
+        public ActionResult Recommendations()
+        {
+
+
+            return View();
+        }
+
+        public ActionResult GetRecommendationsFriends()
+        {
+
+            return View();
         }
     }
 }
