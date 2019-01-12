@@ -1,34 +1,35 @@
 ﻿@model dmMoWizz.Models.ViewModels.HomePageViewModel
-<div class="navbar-fixed black">
-    <nav>
-        <div class="nav-wrapper">
-            <div class="row">
-                <div class="col s10 offset-s1">
-                    <div class="row">
-                        <form class="col s12">
-                            <div class="row">
-                                <div class="input-field">
-                                    <i id="searchButton" class="material-icons prefix" style="color:white">search</i>
-                                    <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
-                                    @*<label for="icon_prefix2">Search movies</label>*@
+@*<div class="navbar-fixed black">
+        <nav>
+            <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field">
+                                        <i id="searchButton" class="material-icons prefix" style="color:white">search</i>
+                                        <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
+                                        <label for="icon_prefix2">Search movies</label>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>*@
 
 
-<div class="carousel carousel-slider center" style="height:500px">
+<div class="carousel carousel-slider center" style="height:600px">
     @foreach (var movie in Model.Popular.Take(5))
     {
-        <div class="carousel-item white-text" style="filter:grayscale(100%); background-image:url(@movie.BackdropPath); background-size:cover; background-position:center">
+        <div class="carousel-item white-text" style="background-image:url(@movie.BackdropPath); background-size:cover; background-position:center">
+            <h2 style="font-size:5rem; position:absolute; top:440px; left:120px; padding-left:10px; padding-right:10px" id="headline-title">@movie.Title</h2>
             @*<p class="white-text">@movie.AverageRate</p>*@
         </div>
-        <h2 style="background-color:#4db6ac; position:absolute; top:300px; left:50px" id="headline-title"></h2>
+        @*<h2 style="background-color:#4db6ac; position:absolute; top:300px; left:140px; padding-left:10px; padding-right:10px" id="headline-title">@movie.Title</h2>*@
     }
 </div>
 
@@ -141,7 +142,7 @@
                     @foreach (var movie in Model.Watchlist)
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -180,7 +181,7 @@
                     @foreach (var movie in Model.Popular.Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -219,7 +220,7 @@
                     @foreach (var movie in Model.Popular.Skip(4).Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -263,7 +264,7 @@
     <div class="modal-content" id="modal-content">
         <h4>Modal Header</h4>
         <p>A bunch of text</p>
-    </div>  
+    </div>
 </div>
 
 <script>
@@ -271,22 +272,19 @@
     $(document).ready(function () {
         $('.tooltipped').tooltip();
         $('.card').click(function (e) {
-            var id = $(this).attr("data-id");
-            $.ajax({
-                type: "POST",
-                url: "/movie/summary?movieid=" + id,
-                data: id,
-                success: function (response) {
-                    //console.log($('#modal-content'))
-                    //$('#modal').css("background-image", "url(http://image.tmdb.org/t/p/w500//fzfe2srDBAQLfvlYRpAACvwe39X.jpg)");
-                    //$('#modal').css("background-size", "cover");
-                    //$('#modal').css("background-position", "center");
-
-                    $('#modal-content').html(response);
-                    $('#modal').modal();
-                    $('#modal').modal('open');
-                },
-            });
+            if (e.target.className != "material-icons") {
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    type: "POST",
+                    url: "/movie/summary?movieid=" + id,
+                    data: id,
+                    success: function (response) {
+                        $('#modal-content').html(response);
+                        $('#modal').modal();
+                        $('#modal').modal('open');
+                    },
+                });
+            }
         })
         $('.addtowatchlist').click(function () {
             var element = $(this);

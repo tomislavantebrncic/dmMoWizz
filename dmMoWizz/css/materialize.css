@@ -9304,3 +9304,19 @@ input[type=range]::-ms-thumb {
         margin-top: 1.2rem;
     }
 }
+
+.fb-logo {
+    display: block;
+    /*text-indent: -9999px;*/
+    width: 300px;
+    height: 82px;
+    background: url(/Images/fb-button.svg);
+    background-size: 300px 82px;
+    position: fixed;
+    left: 100px;
+    bottom: 100px;
+    padding-top: 15px;
+    margin-bottom: 0;
+    z-index: 997;
+    cursor:pointer
+}

@@ -1,32 +1,43 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_LandingLayout.cshtml";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+<div class="slider fullscreen" style="filter:grayscale(100%)">
+    <ul class="slides">
+        <li>
+            <img src="/Images/godfather.jpg"> <!-- random image -->
+            <div class="caption right-align">
+                <h3>Made just for you</h3>
+                <h5 class="light grey-text text-lighten-3">because we are interested in movies you like</h5>
+            </div>
+        </li>
+        <li>
+            <img src="/Images/shawshank.jpg"> <!-- random image -->
+            <div class="caption center-align">
+                <h3>Personalized</h3>
+                <h5 class="light grey-text text-lighten-3">by providing a tailored movie experince</h5>
+            </div>
+        </li>
+        <li>
+            <img src="/Images/titanic.jpg"> <!-- random image -->
+            <div class="caption right-align">
+                <h3>Simple and easy</h3>
+                <h5 class="light grey-text text-lighten-3">Only Facebook account needed</h5>
+            </div>
+        </li>
+        <li>
+            <img src="/Images/wolf.png"> <!-- random image -->
+            <div class="caption right-align" style="top:70% !important">
+                <h3>Popular movies</h3>
+                <h5 class="light grey-text text-lighten-3">carefully chosen</h5>
+            </div>
+        </li>
+    </ul>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<script>
+    $(document).ready(function () {
+        $('.slider').slider();
+    });
+</script>

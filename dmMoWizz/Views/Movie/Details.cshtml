@@ -16,7 +16,7 @@
     {
         foreach (var image in Model.Backdrops)
         {
-            var imagePath = "http://image.tmdb.org/t/p/w500//" + image.FilePath;
+            var imagePath = "http://image.tmdb.org/t/p/w1280//" + image.FilePath;
 
             <a class="carousel-item" href="#one!"><img src="@imagePath"></a>
         }
@@ -25,20 +25,20 @@
     {
         foreach (var image in Model.Posters)
         {
-            var imagePath = "http://image.tmdb.org/t/p/w500//" + image.FilePath;
+            var imagePath = "http://image.tmdb.org/t/p/w1280//" + image.FilePath;
 
             <a class="carousel-item" href="#one!"><img src="@imagePath"></a>
         }
     }
     else if (Model.BackdropPath != null)
     {
-        var imagePath = "http://image.tmdb.org/t/p/w500//" + Model.BackdropPath;
+        var imagePath = "http://image.tmdb.org/t/p/w1280//" + Model.BackdropPath;
 
         <a class="carousel-item" href="#one!"><img src="@imagePath"></a>
     }
     else if (Model.PosterPath != null)
     {
-        var imagePath = "http://image.tmdb.org/t/p/w500//" + Model.PosterPath;
+        var imagePath = "http://image.tmdb.org/t/p/w1280//" + Model.PosterPath;
 
         <a class="carousel-item" href="#one!"><img src="@imagePath"></a>
     }
@@ -149,7 +149,7 @@
                             @similar.Overview
                         </p>
                         <p>
-                            <a href="/TMDB/Details?movieid=@similar.Id">Explore more</a>
+                            <a href="/movie/details?movieid=@similar.Id">Explore more</a>
                         </p>
                     </div>
                 </div>
