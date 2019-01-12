@@ -68,6 +68,8 @@ namespace dmMoWizz.Controllers
             }
             Forecast forecast = ForecastDataFetcher.getForecast(location.CityName);
             model.Forecast = forecast.Data[0].Main;
+            Session.Add("Location", location.CityName);
+            Session.Add("Forecast", forecast.Data[0].Main);
 
             var movies = _movieService.GetPopular(8);
             foreach (MovieInfo movie in movies)
