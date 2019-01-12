@@ -116,27 +116,27 @@
                         </div>
                     }
                 </div>
-                <div class="row center-align" style="color:#4db6ac">
+                @*<div class="row center-align" style="color:#4db6ac">
                     <i class="material-icons"
                        style="font-size:3rem; cursor:pointer" id="showMoreButton">expand_more</i>
                 </div>
-                <div id="moreMovies"></div>
+                <div id="moreMovies"></div>*@
             </div>
         </div>
     </div>
 }
-<div class="parallax-container" style="height:250px">
+@*<div class="parallax-container" style="height:250px">
     <div class="parallax"><img src="/Images/godfather.jpg"></div>
-</div>
+</div>*@
 
 
 @if (Model.Watchlist != null && Model.Watchlist.Count() > 0)
 {
     <div class="section">
-        <div class="row">
+        <div class="row" style="background:#dcdcdc80">
             <div class="col s10 offset-s1">
                 <h5 style="color:#4db6ac">
-                    Watchlist
+                    Recently added to watchlist
                 </h5>
                 <div class="row">
                     @foreach (var movie in Model.Watchlist)
@@ -166,9 +166,10 @@
         </div>
     </div>
 }
-<div class="parallax-container" style="height:250px">
+@*<div class="parallax-container" style="height:250px">
     <div class="parallax"><img src="/Images/hungergames.jpg"></div>
-</div>
+</div>*@
+
 @if (Model.Popular != null && Model.Popular.Count() > 0)
 {
     <div class="section">
