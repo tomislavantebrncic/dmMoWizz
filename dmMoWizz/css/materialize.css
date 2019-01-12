@@ -9320,3 +9320,12 @@ input[type=range]::-ms-thumb {
     z-index: 997;
     cursor:pointer
 }
+
+.continue-with-facebook {
+    display: block;
+    width: 300px;
+    height: 82px;
+    background: url(/Images/facebook-button.svg);
+    background-size: 300px 82px;
+    cursor: pointer
+}
