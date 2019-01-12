@@ -24,7 +24,7 @@
         </div>
         @if(Model.Cast != null)
         {
-        <p style="font-style:italic">@String.Join(", ", Model.Cast.Select(x => x.Name))</p>
+        <p style="font-style:italic">@String.Join(", ", Model.Cast.Take(5).Select(x => x.Name))</p>
         }
         <p>@Model.Overview</p>
         <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@Model.Id">

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<dmMoWizz.Models.ViewModels.WatchlistItemViewModel>
-<div class="parallax-container" style="height:250px">
+<div class="parallax-container" style="height:400px">
     <div class="parallax"><img src="/Images/cinema.jpg"></div>
 </div>
 <div class="row">
@@ -15,18 +15,46 @@
                     <tr>
                         <td>
                             <div class="row">
-                                <div class="col s6">
-                                    <img src="@movie.PosterURL" />
+                                <div class="col s3">
+                                    <img style="height:300px" src="@movie.PosterURL" />
                                 </div>
-                                <div class="col s6">
+                                <div class="col s9">
                                     <div>
-                                        @movie.Title
+                                        <h3>
+                                            @movie.Title (@movie.Year)
+                                        </h3>
                                     </div>
                                     <div>
-                                        <span style="font-style:italic">@String.Join(", ", movie.Cast.Select(x => x.Name))</span>
+                                        <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
                                     </div>
                                     <div>
                                         @movie.Overview
+                                    </div>
+                                    <div class="row" style="margin-top:50px">
+                                        <div class="col s2">
+                                            <div class="center-align">
+                                                <div class="valign-wrapper">
+                                                    <i class="material-icons" style="color:#26a69a; font-size:3rem">star</i>
+                                                    <span style="font-weight:bold; color:#26a69a">@movie.AverageVote</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col s2">
+                                            <div class="valign-wrapper">
+                                                <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                                                <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
+                                            </div>
+                                        </div>
+                                        <div class="col s6">
+                                            <div class="right-align">
+                                                <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
+                                            </div>
+                                        </div>
+                                        <div class="col s2">
+                                            <div class="right-align">
+                                                <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -37,8 +65,69 @@
         </table>
     </div>
 </div>
+<!-- Modal Structure -->
+<div id="modal" class="modal" style="top:40% !important; width:40% !important">
+    <div class="modal-content">
+        <div class="center-align">
+            @for (int i = 1; i<=10; ++i)
+            {
+            <i class="material-icons emptystar" id="@i" style="color:#26a69a; font-size:3rem">star_border</i>
+            }
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         $('.parallax').parallax();
+        $('.removefromwatchlist').click(function () {
+            var element = $(this).parent().parent().parent().parent().parent().parent().parent();
+            console.log(element);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/removefromWatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut();
+                    M.toast({ html: 'Removed from watchlist.' })
+                },
+                error: function () {
+                    M.toast({ html: 'Oops! Something went wrong. Movie was not removed form watchlist.' })
+                }
+            });
+        });
+        $('.rate').click(function () {
+            var id = $(this).attr('data-id');
+            $('#modal').attr("data-id", id);
+            $('#modal').modal();
+            $('#modal').modal('open');
+        });
+        $('.emptystar').mouseover(function () {
+            var index = $(this).attr('id');
+            for (var i = 1; i <= index; ++i) {
+                $('#' + i).text("star");
+            }
+            for (var i = Number(index) + 1; i <= 10; ++i) {
+                $('#' + i).text("star_border");
+            }
+        });
+        $('.emptystar').click(function (e) {
+            var index = $(this).attr('id');
+            var id = $('#modal').attr("data-id");
+            console.log(id);
+            $.ajax({
+                type: "POST",
+                url: "/user/rate?movieid=" + id + "&rating=" + index,
+                data: id,
+                success: function () {
+                    $('#modal').modal('close');
+                    M.toast({ html: 'Movie rated.' })
+                },
+                error: function () {
+                    M.toast({ html: 'Oops! Something went wrong. Movie was not rated.' })
+                }
+            });
+        });
     });
 </script>

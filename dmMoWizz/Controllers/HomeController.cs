@@ -60,6 +60,7 @@ namespace dmMoWizz.Controllers
             {
                 model.Popular.Add(new HomePageMovieViewModel
                 {
+                    Id = movie.id,
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     Title = movie.title,
@@ -92,6 +93,7 @@ namespace dmMoWizz.Controllers
                 var movie = _movieRepository.GetMovie(w.Id);
                 model.Watchlist.Add(new HomePageMovieViewModel
                 {
+                    Id = movie.id,
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     Title = movie.title,

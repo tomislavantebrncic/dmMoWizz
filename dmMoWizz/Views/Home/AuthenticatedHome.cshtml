@@ -1,25 +1,25 @@
 ﻿@model dmMoWizz.Models.ViewModels.HomePageViewModel
 @*<div class="navbar-fixed black">
-    <nav>
-        <div class="nav-wrapper">
-            <div class="row">
-                <div class="col s10 offset-s1">
-                    <div class="row">
-                        <form class="col s12">
-                            <div class="row">
-                                <div class="input-field">
-                                    <i id="searchButton" class="material-icons prefix" style="color:white">search</i>
-                                    <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
-                                    <label for="icon_prefix2">Search movies</label>
+        <nav>
+            <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s10 offset-s1">
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field">
+                                        <i id="searchButton" class="material-icons prefix" style="color:white">search</i>
+                                        <textarea id="icon_prefix2" style="color:white" class="materialize-textarea"></textarea>
+                                        <label for="icon_prefix2">Search movies</label>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</div>*@
+        </nav>
+    </div>*@
 
 
 <div class="carousel carousel-slider center" style="height:600px">
@@ -142,7 +142,7 @@
                     @foreach (var movie in Model.Watchlist)
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -181,7 +181,7 @@
                     @foreach (var movie in Model.Popular.Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -220,7 +220,7 @@
                     @foreach (var movie in Model.Popular.Skip(4).Take(4))
                     {
                         <div class="col s12 m3">
-                            <div class="card">
+                            <div class="card" data-id="@movie.Id">
                                 <div class="card-image">
                                     <img src="@movie.BackdropPath" style="object-fit: cover; object-position: center; height: 200px; width: 100%;">
                                     <span class="card-title">@movie.Title</span>
@@ -272,22 +272,19 @@
     $(document).ready(function () {
         $('.tooltipped').tooltip();
         $('.card').click(function (e) {
-            var id = $(this).attr("data-id");
-            $.ajax({
-                type: "POST",
-                url: "/movie/summary?movieid=" + id,
-                data: id,
-                success: function (response) {
-                    //console.log($('#modal-content'))
-                    //$('#modal').css("background-image", "url(http://image.tmdb.org/t/p/w500//fzfe2srDBAQLfvlYRpAACvwe39X.jpg)");
-                    //$('#modal').css("background-size", "cover");
-                    //$('#modal').css("background-position", "center");
-
-                    $('#modal-content').html(response);
-                    $('#modal').modal();
-                    $('#modal').modal('open');
-                },
-            });
+            if (e.target.className != "material-icons") {
+                var id = $(this).attr("data-id");
+                $.ajax({
+                    type: "POST",
+                    url: "/movie/summary?movieid=" + id,
+                    data: id,
+                    success: function (response) {
+                        $('#modal-content').html(response);
+                        $('#modal').modal();
+                        $('#modal').modal('open');
+                    },
+                });
+            }
         })
         $('.addtowatchlist').click(function () {
             var element = $(this);
