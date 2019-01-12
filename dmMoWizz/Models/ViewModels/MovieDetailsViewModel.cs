@@ -33,6 +33,7 @@ namespace dmMoWizz.Models.ViewModels
 
         public ImageViewModel[] Posters { get; set; }
         public ImageViewModel[] Backdrops { get; set; }
+        public TrailerViewModel[] Trailers { get; set; }
     }
 
     public class CreditsViewModel
@@ -83,5 +84,16 @@ namespace dmMoWizz.Models.ViewModels
         public string BackdropPath { get; set; }
         public string Overview { get; set; }
         public string VoteAverage { get; set; }
+    }
+
+    public class TrailerViewModel
+    {
+        public string Id { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public string Site { get; set; }
+        public int Size { get; set; }
     }
 }

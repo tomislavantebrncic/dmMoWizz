@@ -72,6 +72,12 @@ namespace dmMoWizz.Services
             return GetRecommendations(await GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}"));
         }
 
+        public async Task<List<Recommendation>> GetRecommendationsFriends(IList<System.Security.Claims.Claim> currentClaims)
+        {
+            return GetFriendsRecommendations(await GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}"));
+        }
+
+
         public List<Recommendation> GetRecommendations(Info info)
         {
             List<Recommendation> similars = new List<Recommendation>();
@@ -133,7 +139,6 @@ namespace dmMoWizz.Services
 
             foreach (var recommendation in similars)
             {
-                System.Diagnostics.Debug.WriteLine("dodajem " + recommendation.Movie.id + " " + recommendation.Rating);
                 _scores[recommendation.Movie.id] = recommendation.Rating;
             }
 
@@ -156,6 +161,22 @@ namespace dmMoWizz.Services
             return similars;
         }
 
+        public List<Recommendation> GetFriendsRecommendations(Info info)
+        {
+            List<Recommendation> recommendations = new List<Recommendation>();
+
+            List<Recommendation> friendsSimilars = new List<Recommendation>();
+            foreach (var friend in info.Friends.Data)
+            {
+                foreach (var movie in friend.Likes.Data)
+                {
+                    var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
+                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo, 1);
+                }
+            }
+
+            return recommendations;
+        }
 
         #region Helper Methods
         private void FillSimilars(List<Recommendation> similars, MovieInfo movieInfo)
