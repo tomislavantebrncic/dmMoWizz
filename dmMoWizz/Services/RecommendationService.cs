@@ -137,8 +137,10 @@ namespace dmMoWizz.Services
 
             similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
 
+            double max = similars.FirstOrDefault().Rating;
             foreach (var recommendation in similars)
             {
+                recommendation.Rating = recommendation.Rating / max * 100;
                 _scores[recommendation.Movie.id] = recommendation.Rating;
             }
 

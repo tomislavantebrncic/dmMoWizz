@@ -80,7 +80,7 @@ namespace dmMoWizz.Controllers
                     AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
                     AverageRate = movie.vote_average.ToString(),
                     Overview = movie.overview,
-                    PersonalRate = recommendation.Rating.ToString(),
+                    PersonalRate = Math.Round(recommendation.Rating, 2).ToString() + "%",
                     Title = movie.title,
                     BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
                     PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
