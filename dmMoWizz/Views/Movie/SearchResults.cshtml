@@ -37,11 +37,15 @@ else
                                                 <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
                                             </div>
                                         }
+                                        @if (movie.Genres != null && movie.Genres.Count() > 0)
+                                        {
+                                            <div class="collection-item"><span class="teal-text">@String.Join(", ", movie.Genres.Select(x => x.Name))</span></div>
+                                        }
                                         <hr />
                                         <div>
                                             @movie.Overview
                                         </div>
-                                        <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@movie.Id">
+                                        <a style="font-style:italic; color:#26a69a; font-weight:bold" href="/movie/details?movieId=@movie.Id">
                                             See more...
                                         </a>
                                         <div class="row" style="margin-top:50px">

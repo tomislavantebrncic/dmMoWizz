@@ -36,9 +36,17 @@ else
                                         <div>
                                             <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
                                         </div>
+                                        @if (movie.Genres != null && movie.Genres.Count() > 0)
+                                        {
+                                            <div class="collection-item"><span class="teal-text">@String.Join(", ", movie.Genres.Select(x => x.Name))</span></div>
+                                        }
+                                        <hr />
                                         <div>
                                             @movie.Overview
                                         </div>
+                                        <a style="font-style:italic; color:#26a69a; font-weight:bold" href="/movie/details?movieId=@movie.Id">
+                                            See more...
+                                        </a>
                                         <div>
                                             Added on @movie.AddedOnDate
                                         </div>
@@ -61,9 +69,18 @@ else
                                                 }
                                             </div>
                                             <div class="col s6">
-                                                <div class="right-align">
-                                                    <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
-                                                </div>
+                                                @if (movie.Rate == null)
+                                                {
+                                                    <div class="right-align">
+                                                        <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="right-align">
+                                                        <a class="waves-effect waves-light btn" disabled><i class="material-icons left">rate_review</i>Rated @movie.Rate</a>
+                                                    </div>
+                                                }
                                             </div>
                                             <div class="col s2">
                                                 <div class="right-align">
@@ -94,6 +111,8 @@ else
 }
 
 <script>
+    var buttonToDisable = null;
+
     $(document).ready(function () {
         $('.parallax').parallax();
         $('.removefromwatchlist').click(function () {
@@ -114,6 +133,7 @@ else
             });
         });
         $('.rate').click(function () {
+            buttonToDisable = $(this);
             var id = $(this).attr('data-id');
             $('#modal').attr("data-id", id);
             $('#modal').modal();
@@ -131,14 +151,18 @@ else
         $('.emptystar').click(function (e) {
             var index = $(this).attr('id');
             var id = $('#modal').attr("data-id");
-            console.log(id);
+            buttonToDisable.attr("disabled", "disabled");
+            buttonToDisable.html('Rated ' + index);
             $.ajax({
                 type: "POST",
                 url: "/user/rate?movieid=" + id + "&rating=" + index,
                 data: id,
                 success: function () {
                     $('#modal').modal('close');
-                    M.toast({ html: 'Movie rated.' })
+                    M.toast({ html: 'Movie rated.' });
+                    for (var i = 1; i <= 10; ++i) {
+                        $('#' + i).text("star_border");
+                    }
                 },
                 error: function () {
                     M.toast({ html: 'Oops! Something went wrong. Movie was not rated.' })

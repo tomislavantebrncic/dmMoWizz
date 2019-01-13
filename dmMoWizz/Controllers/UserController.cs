@@ -110,7 +110,7 @@ namespace dmMoWizz.Controllers
                     PersonalRate = _recommendationService.GetRecommendation(movieInfo.id).ToString()+"%",
                     Cast = cast,
                     
-                    Rate = rate != null ? rate.ToString() : null
+                    Rate = rate != null ? rate.Rating.ToString() : null
                 });
             }
 

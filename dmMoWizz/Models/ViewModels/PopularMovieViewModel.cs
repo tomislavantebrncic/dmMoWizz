@@ -20,6 +20,6 @@ namespace dmMoWizz.Models.ViewModels
         //fill with a few 1-5 most important cast members
         public List<CastPersonViewModel> Cast { get; set; }
         public bool AddedToWatchlist { get; set; }
-
+        public List<GenreViewModel> Genres { get; set; }
     }
 }
