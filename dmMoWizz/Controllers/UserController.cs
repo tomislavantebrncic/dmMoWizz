@@ -125,5 +125,11 @@ namespace dmMoWizz.Controllers
 
             return View();
         }
+
+        public ActionResult UserRatingsRecommendations()
+        {
+
+            return View();
+        }
     }
 }

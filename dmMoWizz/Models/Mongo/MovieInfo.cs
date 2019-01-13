@@ -158,6 +158,7 @@ namespace dmMoWizz.Models.Mongo
         public AppRating AppRating { get; set; }
         public List<Song> Soundtrack { get; set; }
         public Videos videos { get; set; }
+        public List<TraktTVSimilar> TraktSimilars { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -170,6 +171,13 @@ namespace dmMoWizz.Models.Mongo
         {
             return 1877310944 + id.GetHashCode();
         }
+    }
+
+    public class TraktTVSimilar
+    {
+        public string Title { get; set; }
+        public string ImdbId { get; set; }
+        public int TmdbId { get; set; }
     }
 
     public class Video
