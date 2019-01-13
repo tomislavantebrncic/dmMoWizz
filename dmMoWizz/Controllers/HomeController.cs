@@ -58,7 +58,7 @@ namespace dmMoWizz.Controllers
 
             string ip = Request.UserHostAddress;
             Location location;
-            if (ip.CompareTo("127.0.0.1") == 0)
+            if (ip.CompareTo("127.0.0.1") == 0 || ip.CompareTo("::1") == 0)
             {
                 location = LocationDataFetcher.getLocation("141.136.186.230");
             }
