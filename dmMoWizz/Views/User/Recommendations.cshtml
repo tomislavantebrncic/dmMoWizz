@@ -70,6 +70,8 @@
             ];
             $('#friend-opinions').text(messages[Number($('#friends').val()) - 1]);
             friendsTouched = true;
+            from = 0;
+            to = 20;
             calculateSuggestions();
         });
         $('#similar').change(function () {
@@ -81,6 +83,8 @@
             ];
             $('#similar-options').text(messages[Number($('#similar').val()) - 1]);
             similarTouched = true;
+            from = 0;
+            to = 20;
             calculateSuggestions();
         });
         $('#rates').change(function () {
@@ -92,6 +96,8 @@
             ];
             $('#site-rates').text(messages[Number($('#rates').val()) - 1]);
             ratesTouched = true;
+            from = 0;
+            to = 20;
             calculateSuggestions();
         });
         $(window).scroll(function () {
@@ -109,9 +115,9 @@
                         url: `/user/recommendationsscroll?from=${from}&to=${to}&friendsConst=${friendsConst}&similarConst=${similarConst}&rateConst=${rateConst}`,
                         success: function (response) {
                             $('#results-container').append(response);
-                            //$([document.documentElement, document.body]).animate({
-                            //    scrollTop: $("#results-container").offset().top
-                            //}, 1000);
+                            if ($('#no-more-movies').length) {
+                                enableInfiniteScroll = false;
+                            }
                         },
                         error: function () {
                             M.toast({ html: 'Oops! Something went wrong. Try again.' })
@@ -124,7 +130,7 @@
 
         function calculateSuggestions() {
             if (similarTouched && friendsTouched && ratesTouched) {
-                enableInfiniteScroll = true;
+                //enableInfiniteScroll = true;
 
                 var friendsConst = $('#friends').val();
                 var similarConst = $('#similar').val();
@@ -135,6 +141,12 @@
                     url: `/user/recommendationsscroll?from=${from}&to=${to}&friendsConst=${friendsConst}&similarConst=${similarConst}&rateConst=${rateConst}`,
                     success: function (response) {
                         $('#results-container').html(response);
+                        if ($('#no-more-movies').length) {
+                            enableInfiniteScroll = false;
+                        }
+                        else {
+                            enableInfiniteScroll = true;
+                        }
                         $('#results-container').fadeIn();
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#results-container").offset().top

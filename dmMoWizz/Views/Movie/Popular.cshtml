@@ -1,5 +1,15 @@
-﻿@model IEnumerable<dmMoWizz.Models.ViewModels.RecommendationViewModel>
-@if (Model.Count() > 0)
+﻿@model IEnumerable<dmMoWizz.Models.ViewModels.PopularMovieViewModel>
+<div class="parallax-container" style="height:400px">
+    <div class="parallax"><img src="/Images/movies.jpg"></div>
+</div>
+@if (Model.Count() == 0)
+{
+    <div class="center-align" style="margin-top:50px">
+        <i class="material-icons" style="font-size:7rem; color:#26a69a">sentiment_dissatisfied</i>
+        <p style="font-style:italic; font-size:1rem">Oops! We didn't find any movie.</p>
+    </div>
+}
+else
 {
     <div class="row">
         <div class="col s10 offset-s1">
@@ -7,6 +17,7 @@
                 <thead>
                     <tr></tr>
                 </thead>
+
                 <tbody>
                     @foreach (var movie in Model)
                     {
@@ -24,9 +35,9 @@
                                         </div>
                                         @if (movie.Cast != null)
                                         {
-                                            <div>
-                                                <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
-                                            </div>
+                                        <div>
+                                            <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
+                                        </div>
                                         }
                                         <div>
                                             @movie.Overview
@@ -41,10 +52,13 @@
                                                 </div>
                                             </div>
                                             <div class="col s2">
-                                                <div class="valign-wrapper">
-                                                    <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
-                                                    <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
-                                                </div>
+                                                @if (movie.PersonalRate != "-1%")
+                                                {
+                                                    <div class="valign-wrapper">
+                                                        <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                                                        <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
+                                                    </div>
+                                                }
                                             </div>
                                             <div class="col s6">
                                                 <div class="right-align">
@@ -53,8 +67,16 @@
                                             </div>
                                             <div class="col s2">
                                                 <div class="right-align">
-                                                    <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>Add</a>
-                                                    <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id" style="display:none"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    @if (movie.AddedToWatchlist)
+                                                    {
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -68,15 +90,10 @@
         </div>
     </div>
 }
-else
-{
-    <div class="center-align" style="margin-top:50px" id="no-more-movies">
-        <i class="material-icons" style="font-size:7rem; color:#26a69a">sentiment_dissatisfied</i>
-        <p style="font-style:italic; font-size:1rem">No more movies to show.</p>
-    </div>
-}
-
 <script>
+    $(document).ready(function () {
+        $('.parallax').parallax();
+    });
     $('.addtowatchlist').click(function () {
         var element = $(this);
         var id = $(this).attr("data-id")
@@ -85,7 +102,7 @@ else
             url: "/user/addtowatchlist?id=" + id,
             data: id,
             success: function () {
-                element.fadeOut(1);
+                element.fadeOut();
                 element.next().fadeIn();
                 M.toast({ html: 'Added to watchlist.' })
             },
@@ -99,7 +116,7 @@ else
             url: "/user/removefromWatchlist?id=" + id,
             data: id,
             success: function () {
-                element.fadeOut(1);
+                element.fadeOut();
                 element.prev().fadeIn();
                 M.toast({ html: 'Removed from watchlist.' })
             },
