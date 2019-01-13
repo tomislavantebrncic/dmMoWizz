@@ -16,14 +16,18 @@ namespace dmMoWizz.Services
             Tunefind tf = new Tunefind();
             TraktTV ttv = new TraktTV();
             List<TraktTVSimilar> traktTVSimilars = new List<TraktTVSimilar>();
-            foreach (var ts in ttv.GetTraktTVResponse(movieDetails.imdb_id))
+            var ttvs = ttv.GetTraktTVResponse(movieDetails.imdb_id);
+            if (ttvs != null)
             {
-                traktTVSimilars.Add(new TraktTVSimilar
+                foreach (var ts in ttv.GetTraktTVResponse(movieDetails.imdb_id))
                 {
-                    Title = ts.title,
-                    ImdbId = ts.ids.imdb,
-                    TmdbId = ts.ids.tmdb
-                });
+                    traktTVSimilars.Add(new TraktTVSimilar
+                    {
+                        Title = ts.title,
+                        ImdbId = ts.ids.imdb,
+                        TmdbId = ts.ids.tmdb
+                    });
+                }
             }
             movieDetails.TraktSimilars = traktTVSimilars;
             movieDetails.Ratings = GetRatingsFromImdbId(movieDetails.imdb_id);
