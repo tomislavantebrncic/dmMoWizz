@@ -19,6 +19,8 @@ namespace dmMoWizz.Models.ViewModels
         public string Overview { get; set; }
         //date in format dd-MM-yyyy when movie was added to watchlist
         public string AddedOnDate { get; set; }
+        //fill if user has rated movie
+        public string Rate { get; set; }
         //fill with a few 1-5 most important cast members
         public List<CastPersonViewModel> Cast { get; set; }
     }

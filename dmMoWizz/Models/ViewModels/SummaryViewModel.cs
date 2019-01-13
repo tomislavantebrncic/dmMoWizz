@@ -17,5 +17,6 @@ namespace dmMoWizz.Models.ViewModels
         public string PersonalRate { get; set; }
         public string Year { get; set; }
         public bool AddedToWatchlist { get; set; }
+        public string Trailer { get; set; }
     }
 }

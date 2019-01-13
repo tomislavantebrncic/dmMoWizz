@@ -1,7 +1,14 @@
 ﻿@model dmMoWizz.Models.ViewModels.SummaryViewModel
 <div>
-    <div style="margin:-24px; height:400px; filter:grayscale(100%); background-image:url(@Model.Backdrop); background-size:cover; background-position:center">
-    </div>
+    @if (Model.Trailer != null)
+    {
+        <iframe width="750" height="315" src="https://www.youtube.com/embed/@Model.Trailer" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    }
+    else
+    {
+        <div style="margin:-24px; height:400px; filter:grayscale(100%); background-image:url(@Model.Backdrop); background-size:cover; background-position:center">
+        </div>
+    }
     <div style="padding-top:49px">
         <div class="row">
             <div class="col s8">
@@ -22,9 +29,9 @@
                 </div>
             </div>
         </div>
-        @if(Model.Cast != null)
+        @if (Model.Cast != null)
         {
-        <p style="font-style:italic">@String.Join(", ", Model.Cast.Take(5).Select(x => x.Name))</p>
+            <p style="font-style:italic">@String.Join(", ", Model.Cast.Take(5).Select(x => x.Name))</p>
         }
         <p>@Model.Overview</p>
         <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@Model.Id">

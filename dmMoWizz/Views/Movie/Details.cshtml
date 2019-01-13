@@ -71,10 +71,17 @@
             <li class="collection-item">Release - <span class="teal-text" style="font-weight:bold">@Model.ReleaseDate<span></span></li>
             @if (Model.SpokenLanguages != null && Model.SpokenLanguages.Count() > 0)
             {
-            <li class="collection-item">Languages - <span class="teal-text" style="font-weight:bold">@Model.SpokenLanguages.Select(x => x.Name).Aggregate((a, b) => a + ", " + b)<span></span></li>
+                <li class="collection-item">Languages - <span class="teal-text" style="font-weight:bold">@Model.SpokenLanguages.Select(x => x.Name).Aggregate((a, b) => a + ", " + b)<span></span></li>
             }
             <li class="collection-item">@Model.Overview</li>
         </ul>
+
+        @if (Model.Trailers != null && Model.Trailers.Count() > 0)
+        {
+            <iframe width="730" height="500" src="https://www.youtube.com/embed/@Model.Trailers.FirstOrDefault().Key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        }
+
         @if (Model.ProductionCompanies != null && Model.ProductionCompanies.Count() > 0)
         {
             <ul class="collection with-header section scrollspy" id="production">
