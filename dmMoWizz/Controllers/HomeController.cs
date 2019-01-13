@@ -58,7 +58,7 @@ namespace dmMoWizz.Controllers
 
             string ip = Request.UserHostAddress;
             Location location;
-            if (ip.CompareTo("::1") == 0)
+            if (ip.CompareTo("127.0.0.1") == 0)
             {
                 location = LocationDataFetcher.getLocation("141.136.186.230");
             }
@@ -89,7 +89,7 @@ namespace dmMoWizz.Controllers
 
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
 
-            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 1, 4, 1);
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 2, 4, 1);
             foreach (var recommendation in recommendedMovies.Take(8).ToList())
             {
                 var movie = recommendation.Movie;
@@ -135,7 +135,7 @@ namespace dmMoWizz.Controllers
             var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
 
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
-            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 1, 4, 1);
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 2, 4, 1);
             foreach (var recommendation in recommendedMovies.Skip(8).Take(8).ToList())
             {
                 var movie = recommendation.Movie;
