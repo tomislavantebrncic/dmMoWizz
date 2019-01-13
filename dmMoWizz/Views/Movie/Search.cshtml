@@ -2,7 +2,7 @@
 <div class="parallax-container" style="height:400px">
     <div class="parallax"><img src="/Images/cinema.jpg"></div>
 </div>
-<div class="row" style="margin-top:50px">
+<div class="row" style="margin-top:50px" id="form-container">
     <form class="col s10 offset-s1 center-align" id="search-form">
         <div class="row">
             <div class="input-field col s6 offset-s3">
@@ -21,9 +21,9 @@
             <div class="input-field col s6 offset-s3">
                 <select multiple id="genre">
                     <option value="" disabled>Choose genre</option>
-                    @foreach(var genre in Model.GenresDropdown)
+                    @foreach (var genre in Model.GenresDropdown)
                     {
-                    <option value=@genre.Id>@genre.Name</option>
+                        <option value=@genre.Id>@genre.Name</option>
                     }
                 </select>
                 <label>Choose genre</label>
@@ -58,25 +58,47 @@
         </button>
     </form>
 </div>
+<div id="search-container" style="display:none">
+    <div style="height:300px; width:100px; margin-left:45%" class="valign-wrapper center-align">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         $('select').formSelect();
         $("#search-form").submit(function (e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
+            $("#search-container").fadeIn();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#search-container").offset().top
+            }, 1000);
             var data = {
                 title: $('#title').val(),
                 year: $('#year').val(),
                 genre: $('#genre').val(),
                 sort: $('input[type=radio]:checked').val()
             };
-            console.log(data);
             $.ajax({
                 type: "POST",
                 url: "/movie/search",
-                data: data, 
-                success: function (data) {
-                    alert(data); 
+                data: data,
+                success: function (response) {
+                    $("#search-container").fadeOut();
+                    $("#search-container").html(response);
+                    $("#search-container").fadeIn();
+                },
+                error: function () {
+                    M.toast({ html: 'Oops! Something went wrong. Try again.' })
                 }
             });
         });

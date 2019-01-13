@@ -276,7 +276,7 @@ namespace dmMoWizz.Controllers
                     Year = movie.release_date.Split('-')[0],
                     AverageVote = movie.vote_average.ToString(),
                     Overview = movie.overview,
-                    PosterURL = movie.poster_path,
+                    PosterURL = "http://image.tmdb.org/t/p/w500/"  + movie.poster_path,
                     Cast = cast,
                     Genres = genres
                 });
@@ -284,18 +284,18 @@ namespace dmMoWizz.Controllers
 
             if (model.Sort == "name")
             {
-                result.OrderBy(x => x.Title);
+                result = result.OrderBy(x => x.Title).ToList();
             }
             else if (model.Sort == "year")
             {
-                result.OrderBy(x => x.Year);
+                result = result.OrderByDescending(x => x.Year).ToList();
             }
             else if (model.Sort == "rate")
             {
-                result.OrderBy(x => x.AverageVote);
+                result = result.OrderByDescending(x => x.AverageVote).ToList();
             }
 
-            return PartialView("Search", result);
+            return PartialView("SearchResults", result);
         }
 
         public ActionResult Summary(int movieId)

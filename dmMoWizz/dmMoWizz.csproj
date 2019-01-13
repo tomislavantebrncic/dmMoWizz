@@ -327,6 +327,7 @@
     <Content Include="Views\Movie\Search.cshtml" />
     <Content Include="Views\User\Watchlist.cshtml" />
     <Content Include="Views\Movie\Summary.cshtml" />
+    <Content Include="Views\Movie\SearchResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
