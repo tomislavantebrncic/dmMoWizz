@@ -50,6 +50,10 @@
             <li><a href="#production">Production companies</a></li>
             <li><a href="#cast">Cast</a></li>
             <li><a href="#crew">Crew</a></li>
+            @if (Model.Soundtracks != null && Model.Soundtracks.Count() > 0)
+            {
+                <li><a href="#soundtracks">Soundtracks</a></li>
+            }
         </ul>
     </div>
     <div class="col s6">
@@ -66,24 +70,24 @@
             @if (Model.Ratings != null && Model.Ratings.Count() > 0)
             {
                 <li class="collection-item valign-wrapper">
-                        @foreach (var rating in Model.Ratings)
+                    @foreach (var rating in Model.Ratings)
+                    {
+                        if (rating.Source == "Internet Movie Database")
                         {
-                            if (rating.Source == "Internet Movie Database")
-                            {
-                                <div class="imdb-logo" style="margin-left:200px; margin-right:10px"></div>
-                                @rating.Value
-                            }
-                            else if (rating.Source == "Rotten Tomatoes")
-                            {
-                                <div class="rt-logo" style="margin-left:30px; margin-right:10px"></div>
-                                @rating.Value
-                            }
-                            else if (rating.Source == "Metacritic")
-                            {
-                                <div class="metacritic-logo" style="margin-left:30px; margin-right:10px"></div>
-                                @rating.Value
-                            }
+                            <div class="imdb-logo" style="margin-left:200px; margin-right:10px"></div>
+                            @rating.Value
                         }
+                        else if (rating.Source == "Rotten Tomatoes")
+                        {
+                            <div class="rt-logo" style="margin-left:30px; margin-right:10px"></div>
+                            @rating.Value
+                        }
+                        else if (rating.Source == "Metacritic")
+                        {
+                            <div class="metacritic-logo" style="margin-left:30px; margin-right:10px"></div>
+                            @rating.Value
+                        }
+                    }
                 </li>
             }
         </ul><ul class="collection">
@@ -155,6 +159,22 @@
                             @cast.Department
                         </p>
                         <a href="#!" class="secondary-content">@cast.Job</a>
+                    </li>
+                }
+            </ul>
+        }
+        @if (Model.Soundtracks != null && Model.Soundtracks.Count() > 0)
+        {
+            <ul class="collection with-header section scrollspy" id="soundtracks">
+                <li class="collection-header"><h4>Soundtracks</h4></li>
+                @foreach (var sound in Model.Soundtracks)
+                {
+                    <li class="collection-item avatar">
+                        <a href="@sound.Url"><i class="material-icons circle teal">play_circle_outline</i></a>
+                        <span class="title">@sound.Title</span>
+                        <p>
+                            @sound.Author
+                        </p>
                     </li>
                 }
             </ul>

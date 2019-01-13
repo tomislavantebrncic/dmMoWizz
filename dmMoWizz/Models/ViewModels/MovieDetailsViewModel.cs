@@ -35,12 +35,20 @@ namespace dmMoWizz.Models.ViewModels
         public ImageViewModel[] Backdrops { get; set; }
         public TrailerViewModel[] Trailers { get; set; }
         public RatingViewModel[] Ratings { get; set; }
+        public SoundtrackViewModel [] Soundtracks { get; set; }
     }
 
     public class CreditsViewModel
     {
         public CastPersonViewModel[] Cast { get; set; }
         public CrewViewModel[] Crew { get; set; }
+    }
+
+    public class SoundtrackViewModel
+    {
+        public string Author { get; set; }
+        public string Title { get; set; }
+        public string Url { get; set; }
     }
 
     public class CastPersonViewModel
