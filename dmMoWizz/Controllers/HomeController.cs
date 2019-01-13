@@ -65,7 +65,9 @@ namespace dmMoWizz.Controllers
                     Overview = movie.overview,
                     Title = movie.title,
                     BackdropPath = "http://image.tmdb.org/t/p/w1280/" + movie.backdrop_path,
-                    PosterPath = "http://image.tmdb.org/t/p/w1280/" + movie.poster_path
+                    PosterPath = "http://image.tmdb.org/t/p/w1280/" + movie.poster_path,
+                    AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
+                    PersonalRate = _recommendationService.GetRecommendation(movie.id) + "%"
                 });
             }
 
@@ -98,7 +100,9 @@ namespace dmMoWizz.Controllers
                     Overview = movie.overview,
                     Title = movie.title,
                     BackdropPath = "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
-                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path
+                    PosterPath = "http://image.tmdb.org/t/p/w500/" + movie.poster_path,
+                    AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
+                    PersonalRate = _recommendationService.GetRecommendation(movie.id) + "%"
                 });
             }
 

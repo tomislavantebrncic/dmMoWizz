@@ -175,6 +175,16 @@ namespace dmMoWizz.Controllers
                 });
             }
 
+            var ratings = new List<RatingViewModel>();
+            foreach (var rating in movieInfo.Ratings)
+            {
+                ratings.Add(new RatingViewModel
+                {
+                    Source = rating.Source,
+                    Value = rating.Value
+                });
+            }
+
             //TODO fill model
             var model = new MovieDetailsViewModel
             {
@@ -206,7 +216,8 @@ namespace dmMoWizz.Controllers
                 ProductionCountries = countries.ToArray(),
                 SimilarMovies = similars.ToArray(),
                 SpokenLanguages = languages.ToArray(),
-                Trailers = trailers.ToArray()
+                Trailers = trailers.ToArray(),
+                Ratings = ratings.ToArray()
             };
 
             return View(model);

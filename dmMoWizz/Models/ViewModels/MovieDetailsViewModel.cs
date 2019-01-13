@@ -34,6 +34,7 @@ namespace dmMoWizz.Models.ViewModels
         public ImageViewModel[] Posters { get; set; }
         public ImageViewModel[] Backdrops { get; set; }
         public TrailerViewModel[] Trailers { get; set; }
+        public RatingViewModel[] Ratings { get; set; }
     }
 
     public class CreditsViewModel
@@ -95,5 +96,11 @@ namespace dmMoWizz.Models.ViewModels
         public string Name { get; set; }
         public string Site { get; set; }
         public int Size { get; set; }
+    }
+
+    public class RatingViewModel
+    {
+        public string Source { get; set; }
+        public string Value { get; set; }
     }
 }
