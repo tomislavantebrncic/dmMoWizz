@@ -351,5 +351,31 @@ namespace dmMoWizz.Controllers
 
             return PartialView("Summary", model);
         }
+
+        public ActionResult Popular()
+        {
+            var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
+
+            var movies = _movieService.GetPopular(8);
+
+            var model = new List<PopularMovieViewModel>();
+
+            foreach (MovieInfo movie in movies)
+            {
+                model.Add(new PopularMovieViewModel
+                {
+                    Id = movie.id,                
+                    AverageVote = movie.vote_average.ToString(),
+                    Overview = movie.overview,
+                    Title = movie.title,
+                    PosterURL = "http://image.tmdb.org/t/p/w1280/" + movie.poster_path,
+                    AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
+                    PersonalRate = _recommendationService.GetRecommendation(movie.id) + "%",
+                    Year = movie.release_date.Split('-')[0]
+                });
+            }
+
+            return View(model);
+        }
     }
 }
