@@ -61,11 +61,21 @@
 
     $(document).ready(function () {
         $('.parallax').parallax();
+        $('#friends').click(function () {
+            friendsTouched = true;
+        });
+        $('#similar').click(function () {
+            similarTouched = true;
+        });
+        $('#rates').click(function () {
+            ratesTouched = true;
+            calculateSuggestions();
+        });
         $('#friends').change(function () {
             var messages = ["Seems you have a very different taste",
-                "Not so similar",
-                "Similar taste, but your is better, right?",
-                "Very similar",
+                "Not so similar taste",
+                "Similar taste, but yours is better, right?",
+                "Very similar taste",
                 "You are movie buddies!"
             ];
             $('#friend-opinions').text(messages[Number($('#friends').val()) - 1]);
@@ -76,10 +86,10 @@
         });
         $('#similar').change(function () {
             var messages = ["You like to try something new, don't you?",
-                "Not so similar",
-                "You can decide better than the expertise!",
-                "Seems like you could join expertise",
-                "Are you a producer?"
+                "You didn't like those movies?",
+                "Can't decide?",
+                "Those were pretty good movies, aren't they?",
+                "You always made excellent choices!"
             ];
             $('#similar-options').text(messages[Number($('#similar').val()) - 1]);
             similarTouched = true;
@@ -92,7 +102,7 @@
                 "Ok, ok, we won't take them into account.",
                 "So, so",
                 "Rotten Tomatoes or imdb?",
-                "Are you a producer?"
+                "Seems like you could join the expertise"
             ];
             $('#site-rates').text(messages[Number($('#rates').val()) - 1]);
             ratesTouched = true;

@@ -28,6 +28,11 @@
                                                 <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
                                             </div>
                                         }
+                                        @if (movie.Genres != null && movie.Genres.Count() > 0)
+                                        {
+                                            <div class="collection-item"><span class="teal-text">@String.Join(", ", movie.Genres.Select(x => x.Name))</span></div>
+                                        }
+                                        <hr />
                                         <div>
                                             @movie.Overview
                                         </div>
