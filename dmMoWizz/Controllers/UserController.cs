@@ -145,6 +145,17 @@ namespace dmMoWizz.Controllers
                         Order = castPerson.order
                     });
                 }
+
+                var genres = new List<GenreViewModel>();
+                foreach (var genre in movieInfo.genres)
+                {
+                    genres.Add(new GenreViewModel
+                    {
+                        Id = genre.id,
+                        Name = genre.name
+                    });
+                }
+
                 model.Add(new RecommendationViewModel
                 {
                     Title = movieInfo.title,
@@ -154,7 +165,8 @@ namespace dmMoWizz.Controllers
                     Overview = movieInfo.overview,
                     PersonalRate = recommendation.Rating + "%",
                     PosterURL = "http://image.tmdb.org/t/p/w500/" + movieInfo.poster_path,
-                    Year = movieInfo.release_date.Split('-')[0]
+                    Year = movieInfo.release_date.Split('-')[0],
+                    Genres = genres
                 });
             }
 
