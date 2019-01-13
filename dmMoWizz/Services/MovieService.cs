@@ -33,6 +33,7 @@ namespace dmMoWizz.Services
             TMDBPopularMoviesResponse popular = JsonConvert.DeserializeObject<TMDBPopularMoviesResponse>(apiResponse);
 
             List<MovieInfo> movies = popular.results.Take(n).Select(m => FetchMovieDetailsById(m.id)).ToList();
+
             movies.ForEach(m => UpdateDatabase(m));
 
             return movies;
@@ -73,6 +74,7 @@ namespace dmMoWizz.Services
         {
             if (_movieRepository.GetMovie(movie.id) == null)
             {
+                Downloader.GetAdditionalData(movie);
                 _movieRepository.Insert(movie);
                 System.Diagnostics.Debug.WriteLine("Inserting " + movie.title);
             }

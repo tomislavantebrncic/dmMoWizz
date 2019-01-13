@@ -244,6 +244,7 @@
     <Compile Include="Repositories\ForecastRepository.cs" />
     <Compile Include="Repositories\MoviesRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\Downloader.cs" />
     <Compile Include="Services\MovieService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\UserService.cs" />
