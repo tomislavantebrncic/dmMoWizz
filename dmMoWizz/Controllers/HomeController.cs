@@ -72,7 +72,8 @@ namespace dmMoWizz.Controllers
             }
 
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
-            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
+
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 1, 4, 1);
             foreach (var recommendation in recommendedMovies.Take(8).ToList())
             {
                 var movie = recommendation.Movie;
@@ -106,9 +107,7 @@ namespace dmMoWizz.Controllers
                 });
             }
 
-            //model.Suggested = model.Suggested.OrderByDescending(x => x.PersonalRate).ToList();
             model.Popular = model.Popular.OrderByDescending(x => x.AverageRate).ToList();
-            //model.Watchlist = model.Watchlist.OrderByDescending(x => x.AverageRate).ToList();
 
             return View("AuthenticatedHome", model);
         }
@@ -117,8 +116,10 @@ namespace dmMoWizz.Controllers
         {
             var model = new List<HomePageMovieViewModel>();
 
+            var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
+
             var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
-            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(currentClaims);
+            List<Recommendation> recommendedMovies = await _recommendationService.GetRecommendations(user, currentClaims, 1, 4, 1);
             foreach (var recommendation in recommendedMovies.Skip(8).Take(8).ToList())
             {
                 var movie = recommendation.Movie;

@@ -61,21 +61,21 @@ namespace dmMoWizz.Controllers
             return View(info);
         }
 
-        public async Task<ActionResult> Recommendations()
-        {
-            var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
+        //public async Task<ActionResult> Recommendations()
+        //{
+        //    var currentClaims = await UserManager.GetClaimsAsync(HttpContext.User.Identity.GetUserId());
 
-            var info = await _recommendationService.GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}");
+        //    var info = await _recommendationService.GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}");
 
-            if (info == null)
-            {
-                return (new HttpStatusCodeResult(HttpStatusCode.NotFound, "Token not found"));
-            }
+        //    if (info == null)
+        //    {
+        //        return (new HttpStatusCodeResult(HttpStatusCode.NotFound, "Token not found"));
+        //    }
 
-            var sorted = _recommendationService.GetRecommendations(info);
+        //    var sorted = _recommendationService.GetRecommendations(info, 1, 1, 1);
 
-            return View(sorted);
-        }
+        //    return View(sorted);
+        //}
 
         #region Helper Methods
 

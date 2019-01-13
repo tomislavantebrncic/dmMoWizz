@@ -1,4 +1,5 @@
 ﻿using dmMoWizz.Models.Mongo;
+using dmMoWizz.Models.Recommendations;
 using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
 using dmMoWizz.Services;
@@ -123,8 +124,11 @@ namespace dmMoWizz.Controllers
 
             var model = new List<RecommendationViewModel>();
 
-            var recommendations = _recommendationService.GetRecommendationList().Skip(from).Take(to).ToList();
-            foreach (var recommendation in recommendations)
+            var user = _userService.GetUserInfo(HttpContext.User.Identity.GetUserId());
+
+            List<Recommendation> recommendations = _recommendationService.GetRecommendations(user, friendsConst, similarConst, rateConst);
+
+            foreach (var recommendation in recommendations.Skip(from).Take(to))
             {
                 var movieInfo = recommendation.Movie;
                 var cast = new List<CastPersonViewModel>();
@@ -149,6 +153,8 @@ namespace dmMoWizz.Controllers
                     Year = movieInfo.release_date.Split('-')[0]
                 });
             }
+
+            System.Diagnostics.Debug.WriteLine(model.Count);
 
             return PartialView("RecommendationsScroll", model);
         }
