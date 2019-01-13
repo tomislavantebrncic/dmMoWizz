@@ -161,31 +161,32 @@ namespace dmMoWizz.Controllers
             }
 
             var trailers = new List<TrailerViewModel>();
-            foreach (var trailer in movieInfo.videos.results.FindAll(v => v.type.Equals("Trailer")))
-            {
-                trailers.Add(new TrailerViewModel
+            if (movieInfo.videos != null && movieInfo.videos.results != null)
+                foreach (var trailer in movieInfo.videos.results.FindAll(v => v.type.Equals("Trailer")))
                 {
-                    Id = trailer.id,
-                    Iso_3166_1 = trailer.iso_3166_1,
-                    Iso_639_1 = trailer.iso_639_1,
-                    Key = trailer.key,
-                    Name = trailer.name,
-                    Site = trailer.site,
-                    Size = trailer.size
-                });
-            }
+                    trailers.Add(new TrailerViewModel
+                    {
+                        Id = trailer.id,
+                        Iso_3166_1 = trailer.iso_3166_1,
+                        Iso_639_1 = trailer.iso_639_1,
+                        Key = trailer.key,
+                        Name = trailer.name,
+                        Site = trailer.site,
+                        Size = trailer.size
+                    });
+                }
 
             var ratings = new List<RatingViewModel>();
-            foreach (var rating in movieInfo.Ratings)
-            {
-                ratings.Add(new RatingViewModel
+            if (movieInfo.Ratings != null)
+                foreach (var rating in movieInfo.Ratings)
                 {
-                    Source = rating.Source,
-                    Value = rating.Value
-                });
-            }
+                    ratings.Add(new RatingViewModel
+                    {
+                        Source = rating.Source,
+                        Value = rating.Value
+                    });
+                }
 
-            //TODO fill model
             var model = new MovieDetailsViewModel
             {
                 Overview = movieInfo.overview,
@@ -287,7 +288,7 @@ namespace dmMoWizz.Controllers
                     Year = movie.release_date.Split('-')[0],
                     AverageVote = movie.vote_average.ToString(),
                     Overview = movie.overview,
-                    PosterURL = "http://image.tmdb.org/t/p/w500/"  + movie.poster_path,
+                    PosterURL = "http://image.tmdb.org/t/p/w500/" + movie.poster_path,
                     Cast = cast,
                     Genres = genres
                 });
@@ -364,14 +365,17 @@ namespace dmMoWizz.Controllers
             {
                 model.Add(new PopularMovieViewModel
                 {
-                    Id = movie.id,                
+                    Id = movie.id,
                     AverageVote = movie.vote_average.ToString(),
                     Overview = movie.overview,
                     Title = movie.title,
                     PosterURL = "http://image.tmdb.org/t/p/w1280/" + movie.poster_path,
                     AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id }),
                     PersonalRate = _recommendationService.GetRecommendation(movie.id) + "%",
-                    Year = movie.release_date.Split('-')[0]
+                    Year = movie.release_date.Split('-')[0],
+                    Cast = movie.credits.cast.Take(5).Select(x => new CastPersonViewModel {
+                        Name = x.name
+                    }).ToList()
                 });
             }
 

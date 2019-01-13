@@ -35,13 +35,17 @@ else
                                         </div>
                                         @if (movie.Cast != null)
                                         {
-                                        <div>
-                                            <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
-                                        </div>
+                                            <div>
+                                                <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
+                                            </div>
                                         }
+                                        <hr>
                                         <div>
                                             @movie.Overview
                                         </div>
+                                        <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@movie.Id">
+                                            See more...
+                                        </a>
                                         <div class="row" style="margin-top:50px">
                                             <div class="col s2">
                                                 <div class="center-align">
@@ -61,20 +65,20 @@ else
                                                 }
                                             </div>
                                             <div class="col s6">
-                                                <div class="right-align">
+                                                @*<div class="right-align">
                                                     <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
-                                                </div>
+                                                </div>*@
                                             </div>
                                             <div class="col s2">
                                                 <div class="right-align">
                                                     @if (movie.AddedToWatchlist)
                                                     {
                                                         <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
-                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
                                                     }
                                                     else
                                                     {
-                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id" style="display:none"><i class="material-icons left">add_to_queue</i>ADD</a>
                                                         <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
                                                     }
                                                 </div>
@@ -94,6 +98,7 @@ else
     $(document).ready(function () {
         $('.parallax').parallax();
     });
+
     $('.addtowatchlist').click(function () {
         var element = $(this);
         var id = $(this).attr("data-id")
@@ -102,11 +107,12 @@ else
             url: "/user/addtowatchlist?id=" + id,
             data: id,
             success: function () {
-                element.fadeOut();
+                element.fadeOut(1);
                 element.next().fadeIn();
                 M.toast({ html: 'Added to watchlist.' })
             },
         });
+
     });
     $('.removefromwatchlist').click(function () {
         var element = $(this);
@@ -116,7 +122,7 @@ else
             url: "/user/removefromWatchlist?id=" + id,
             data: id,
             success: function () {
-                element.fadeOut();
+                element.fadeOut(1);
                 element.prev().fadeIn();
                 M.toast({ html: 'Removed from watchlist.' })
             },
