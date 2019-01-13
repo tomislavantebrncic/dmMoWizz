@@ -52,10 +52,13 @@ else
                                                 </div>
                                             </div>
                                             <div class="col s2">
-                                                <div class="valign-wrapper">
-                                                    <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
-                                                    <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
-                                                </div>
+                                                @if (movie.PersonalRate != "-1%")
+                                                {
+                                                    <div class="valign-wrapper">
+                                                        <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                                                        <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
+                                                    </div>
+                                                }
                                             </div>
                                             <div class="col s6">
                                                 <div class="right-align">
