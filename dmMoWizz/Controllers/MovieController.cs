@@ -19,6 +19,7 @@ namespace dmMoWizz.Controllers
 
         private readonly RecommendationService _recommendationService;
         private readonly MovieService _movieService;
+        private readonly UserService _userService;
 
         private ApplicationUserManager _userManager;
 
@@ -41,6 +42,7 @@ namespace dmMoWizz.Controllers
 
             _recommendationService = new RecommendationService();
             _movieService = new MovieService();
+            _userService = new UserService();
         }
         // GET: Movies
         public ActionResult Index()
@@ -281,6 +283,8 @@ namespace dmMoWizz.Controllers
                     });
                 }
 
+                var user = _userService.GetUserInfo(UserManager.FindById(User.Identity.GetUserId()).Id);
+
                 result.Add(new SearchResultViewModel
                 {
                     Id = movie.id.ToString(),
@@ -291,8 +295,7 @@ namespace dmMoWizz.Controllers
                     PosterURL = "http://image.tmdb.org/t/p/w500/" + movie.poster_path,
                     Cast = cast,
                     Genres = genres,
-                    //TODO
-                    AddedToWatchlist = false
+                    AddedToWatchlist = user.Watchlist.Contains(new WatchlistMovie { Id = movie.id})
                 });
             }
 
