@@ -1,0 +1,150 @@
+﻿<div class="parallax-container" style="height:400px">
+    <div class="parallax"><img src="/Images/cinema.jpg"></div>
+</div>
+<div class="center-align">
+    <p style="margin-top:50px; font-style:italic">
+        Hey you, help us achieve the best suggesting service as possible! Tell us your priorities:
+    </p>
+    <form action="#">
+        How much do you value your friends opinions regarding movies?
+        <div class="row">
+            <div class="col s3 offset-s3">
+                <p class="range-field">
+                    <input type="range" id="friends" min="1" max="5" />
+                </p>
+            </div>
+            <div class="col s3">
+                <p style="color:#26a69a" id="friend-opinions">
+
+                </p>
+            </div>
+        </div>
+        Would you like to watch movies similar to those you watched?
+        <div class="row">
+            <div class="col s3 offset-s3">
+                <p class="range-field">
+                    <input type="range" id="similar" min="1" max="5" />
+                </p>
+            </div>
+            <div class="col s3">
+                <p style="color:#26a69a" id="similar-options">
+
+                </p>
+            </div>
+        </div>
+        How much do you agree with movie rates on different sites?
+        <div class="row">
+            <div class="col s3 offset-s3">
+                <p class="range-field">
+                    <input type="range" id="rates" min="1" max="5" />
+                </p>
+            </div>
+            <div class="col s3">
+                <p style="color:#26a69a" id="site-rates">
+
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="results-container" style="display:none">
+
+</div>
+<script>
+    var friendsTouched = false;
+    var similarTouched = false;
+    var ratesTouched = false;
+    var enableInfiniteScroll = false;
+
+    var from = 0;
+    var to = 20;
+
+    $(document).ready(function () {
+        $('.parallax').parallax();
+        $('#friends').change(function () {
+            var messages = ["Seems you have a very different taste",
+                "Not so similar",
+                "Similar taste, but your is better, right?",
+                "Very similar",
+                "You are movie buddies!"
+            ];
+            $('#friend-opinions').text(messages[Number($('#friends').val()) - 1]);
+            friendsTouched = true;
+            calculateSuggestions();
+        });
+        $('#similar').change(function () {
+            var messages = ["You like to try something new, don't you?",
+                "Not so similar",
+                "You can decide better than the expertise!",
+                "Seems like you could join expertise",
+                "Are you a producer?"
+            ];
+            $('#similar-options').text(messages[Number($('#similar').val()) - 1]);
+            similarTouched = true;
+            calculateSuggestions();
+        });
+        $('#rates').change(function () {
+            var messages = ["Do you even visit them?",
+                "Ok, ok, we won't take them into account.",
+                "So, so",
+                "Rotten Tomatoes or imdb?",
+                "Are you a producer?"
+            ];
+            $('#site-rates').text(messages[Number($('#rates').val()) - 1]);
+            ratesTouched = true;
+            calculateSuggestions();
+        });
+        $(window).scroll(function () {
+            if (enableInfiniteScroll) {
+                if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+                    from = from + 20;
+                    to = to + 20;
+
+                    var friendsConst = $('#friends').val();
+                    var similarConst = $('#similar').val();
+                    var rateConst = $('#rates').val();
+
+                    $.ajax({
+                        type: "GET",
+                        url: `/user/recommendationsscroll?from=${from}&to=${to}&friendsConst=${friendsConst}&similarConst=${similarConst}&rateConst=${rateConst}`,
+                        success: function (response) {
+                            $('#results-container').append(response);
+                            //$([document.documentElement, document.body]).animate({
+                            //    scrollTop: $("#results-container").offset().top
+                            //}, 1000);
+                        },
+                        error: function () {
+                            M.toast({ html: 'Oops! Something went wrong. Try again.' })
+                        }
+                    });
+
+                }
+            }
+        });
+
+        function calculateSuggestions() {
+            if (similarTouched && friendsTouched && ratesTouched) {
+                enableInfiniteScroll = true;
+
+                var friendsConst = $('#friends').val();
+                var similarConst = $('#similar').val();
+                var rateConst = $('#rates').val();
+
+                $.ajax({
+                    type: "GET",
+                    url: `/user/recommendationsscroll?from=${from}&to=${to}&friendsConst=${friendsConst}&similarConst=${similarConst}&rateConst=${rateConst}`,
+                    success: function (response) {
+                        $('#results-container').html(response);
+                        $('#results-container').fadeIn();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#results-container").offset().top
+                        }, 1000);
+                    },
+                    error: function () {
+                        M.toast({ html: 'Oops! Something went wrong. Try again.' })
+                    }
+                });
+            }
+        }
+    });
+</script>

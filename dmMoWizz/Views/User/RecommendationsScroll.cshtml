@@ -1,0 +1,66 @@
+﻿@model IEnumerable<dmMoWizz.Models.ViewModels.RecommendationViewModel>
+<div class="row">
+    <div class="col s10 offset-s1">
+        <table>
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="col s3">
+                                    <img style="height:300px" src="@movie.PosterURL" />
+                                </div>
+                                <div class="col s9">
+                                    <div>
+                                        <h3>
+                                            @movie.Title (@movie.Year)
+                                        </h3>
+                                    </div>
+                                    @if (movie.Cast != null)
+                                    {
+                                        <div>
+                                            <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
+                                        </div>
+                                    }
+                                    <div>
+                                        @movie.Overview
+                                    </div>
+                                    <div class="row" style="margin-top:50px">
+                                        <div class="col s2">
+                                            <div class="center-align">
+                                                <div class="valign-wrapper">
+                                                    <i class="material-icons" style="color:#26a69a; font-size:3rem">star</i>
+                                                    <span style="font-weight:bold; color:#26a69a">@movie.AverageVote</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col s2">
+                                            <div class="valign-wrapper">
+                                                <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                                                <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.PersonalRate</span>
+                                            </div>
+                                        </div>
+                                        <div class="col s6">
+                                            <div class="right-align">
+                                                <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
+                                            </div>
+                                        </div>
+                                        <div class="col s2">
+                                            <div class="right-align">
+                                                <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

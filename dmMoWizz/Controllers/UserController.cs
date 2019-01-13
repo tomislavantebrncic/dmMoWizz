@@ -115,9 +115,55 @@ namespace dmMoWizz.Controllers
 
         public ActionResult Recommendations()
         {
-
-
             return View();
+        }
+
+        public ActionResult RecommendationsScroll(int from, int to, int friendsConst, int similarConst, int rateConst)
+        {
+            //used for infnite scroll
+            var model = new List<RecommendationViewModel>();
+            model.Add(new RecommendationViewModel
+            {
+                Title = "The Tiny Hedgehog",
+                AverageVote = "7.8",
+                PersonalRate = "98%",
+                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
+                Year="2018",
+                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
+                Id = 217
+            });
+            model.Add(new RecommendationViewModel
+            {
+                Title = "The Tiny Hedgehog",
+                AverageVote = "7.8",
+                PersonalRate = "98%",
+                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
+                Year = "2018",
+                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
+                Id = 217
+            });
+            model.Add(new RecommendationViewModel
+            {
+                Title = "The Tiny Hedgehog",
+                AverageVote = "7.8",
+                PersonalRate = "98%",
+                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
+                Year = "2018",
+                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
+                Id = 217
+            });
+            model.Add(new RecommendationViewModel
+            {
+                Title = "The Tiny Hedgehog",
+                AverageVote = "7.8",
+                PersonalRate = "98%",
+                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
+                Year = "2018",
+                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
+                Id = 217
+            });
+
+            return PartialView("RecommendationsScroll", model);
         }
 
         public ActionResult GetRecommendationsFriends()
