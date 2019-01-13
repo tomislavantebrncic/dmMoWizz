@@ -63,15 +63,40 @@
             <li class="collection-item valign-wrapper"><i class="material-icons" style="margin-right:20px">home</i><a href="@Model.Homepage">Web</a></li>
             <li class="collection-item valign-wrapper"><i class="material-icons" style="margin-right:20px">thumbs_up_down</i> @Model.VoteAverage - @Model.VoteCount votes</li>
             <li class="collection-item valign-wrapper"><i class="material-icons" style="margin-right:20px">star</i> @Model.Popularity</li>
-        </ul>
-
-        <ul class="collection">
+            @if (Model.Ratings != null && Model.Ratings.Count() > 0)
+            {
+                <li class="collection-item valign-wrapper">
+                        @foreach (var rating in Model.Ratings)
+                        {
+                            if (rating.Source == "Internet Movie Database")
+                            {
+                                <div class="imdb-logo" style="margin-left:200px; margin-right:10px"></div>
+                                @rating.Value
+                            }
+                            else if (rating.Source == "Rotten Tomatoes")
+                            {
+                                <div class="rt-logo" style="margin-left:30px; margin-right:10px"></div>
+                                @rating.Value
+                            }
+                            else if (rating.Source == "Metacritic")
+                            {
+                                <div class="metacritic-logo" style="margin-left:30px; margin-right:10px"></div>
+                                @rating.Value
+                            }
+                        }
+                </li>
+            }
+        </ul><ul class="collection">
             <li class="collection-item">Original language - <span class="teal-text" style="font-weight:bold">@Model.OriginalLanguage</span></li>
             <li class="collection-item">Original title - <span class="teal-text" style="font-weight:bold">@Model.OriginalTitle<span></span></li>
             <li class="collection-item">Release - <span class="teal-text" style="font-weight:bold">@Model.ReleaseDate<span></span></li>
             @if (Model.SpokenLanguages != null && Model.SpokenLanguages.Count() > 0)
             {
                 <li class="collection-item">Languages - <span class="teal-text" style="font-weight:bold">@Model.SpokenLanguages.Select(x => x.Name).Aggregate((a, b) => a + ", " + b)<span></span></li>
+            }
+            @if (Model.Genres != null && Model.Genres.Count() > 0)
+            {
+                <li class="collection-item">Genres - <span class="teal-text" style="font-weight:bold">@String.Join(", ", Model.Genres.Select(x => x.Name))<span></span></li>
             }
             <li class="collection-item">@Model.Overview</li>
         </ul>

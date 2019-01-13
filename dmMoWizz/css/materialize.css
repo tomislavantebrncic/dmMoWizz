@@ -9329,3 +9329,30 @@ input[type=range]::-ms-thumb {
     background-size: 300px 82px;
     cursor: pointer
 }
+
+.imdb-logo {
+    display: block;
+    width: 30px;
+    height: 20px;
+    background: url(/Images/imdb.svg);
+    background-size: 30px 20px;
+    cursor: pointer
+}
+
+.rt-logo {
+    display: block;
+    width: 30px;
+    height: 20px;
+    background: url(/Images/rt.svg);
+    background-size: 30px 20px;
+    cursor: pointer
+}
+
+.metacritic-logo {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url(/Images/Metacritic.svg);
+    background-size: 20px 20px;
+    cursor: pointer
+}
