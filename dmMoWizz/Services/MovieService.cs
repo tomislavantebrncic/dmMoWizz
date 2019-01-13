@@ -22,6 +22,11 @@ namespace dmMoWizz.Services
             _movieRepository = new MoviesRepository();
         }
 
+        public List<Genre> GetGenres()
+        {
+            return _movieRepository.GetGenres();
+        }
+
         public List<MovieInfo> GetPopular(int n)
         {
             string apiResponse = CallApi("https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + _tmdbApiKey);
@@ -71,6 +76,13 @@ namespace dmMoWizz.Services
                 _movieRepository.Insert(movie);
                 System.Diagnostics.Debug.WriteLine("Inserting " + movie.title);
             }
+        }
+
+        public List<MovieInfo> GetMovies(string title, string year, int[] genre)
+        {
+            List<Genre> genres = _movieRepository.GetGenres().FindAll(g => genre.Contains(g.id));
+
+            return _movieRepository.GetMovies(title, genres, year);
         }
     }
 }

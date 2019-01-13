@@ -18,6 +18,7 @@ namespace dmMoWizz.Controllers
         private readonly UserRepository _userRepository;
 
         private readonly RecommendationService _recommendationService;
+        private readonly MovieService _movieService;
 
         private ApplicationUserManager _userManager;
 
@@ -39,6 +40,7 @@ namespace dmMoWizz.Controllers
             _userRepository = new UserRepository();
 
             _recommendationService = new RecommendationService();
+            _movieService = new MovieService();
         }
         // GET: Movies
         public ActionResult Index()
@@ -214,18 +216,15 @@ namespace dmMoWizz.Controllers
         {
             var model = new SearchViewModel();
 
-            //TODO make call to service which will fetch genres
-            //TEST data
-            model.GenresDropdown.Add(new GenreViewModel
+            var genres = _movieService.GetGenres();
+            foreach (var genre in genres)
             {
-                Name = "Drama",
-                Id = 18
-            });
-            model.GenresDropdown.Add(new GenreViewModel
-            {
-                Name = "Horror",
-                Id = 27
-            });
+                model.GenresDropdown.Add(new GenreViewModel
+                {
+                    Name = genre.name,
+                    Id = genre.id
+                });
+            }
 
             return View("Search", model);
         }
@@ -235,7 +234,53 @@ namespace dmMoWizz.Controllers
         {
             var result = new List<SearchResultViewModel>();
 
-            //TODO fill result
+            if (model.Year == null)
+            {
+                model.Year = "All";
+            }
+
+            if (model.Genre == null)
+            {
+                model.Genre = new int[0];
+            }
+
+            var movies = _movieService.GetMovies(model.Title, model.Year, model.Genre);
+
+            foreach (var movie in movies)
+            {
+                var cast = new List<CastPersonViewModel>();
+                foreach (Cast castPerson in movie.credits.cast)
+                {
+                    cast.Add(new CastPersonViewModel
+                    {
+                        Character = castPerson.character,
+                        Name = castPerson.name,
+                        Order = castPerson.order
+                    });
+                }
+
+                var genres = new List<GenreViewModel>();
+                foreach (var genre in movie.genres)
+                {
+                    genres.Add(new GenreViewModel
+                    {
+                        Id = genre.id,
+                        Name = genre.name
+                    });
+                }
+
+                result.Add(new SearchResultViewModel
+                {
+                    Id = movie.id.ToString(),
+                    Title = movie.title,
+                    Year = movie.release_date.Split('-')[0],
+                    AverageVote = movie.vote_average.ToString(),
+                    Overview = movie.overview,
+                    PosterURL = movie.poster_path,
+                    Cast = cast,
+                    Genres = genres
+                });
+            }
 
             if (model.Sort == "name")
             {

@@ -105,7 +105,7 @@ namespace dmMoWizz.Controllers
                     Year = movieInfo.release_date.Split('-')[0],
                     AddedOnDate = watchlistMovie.DateAdded.ToShortDateString(),
                     // TO DO
-                    PersonalRate = "0%",
+                    PersonalRate = _recommendationService.GetRecommendation(movieInfo.id).ToString()+"%",
                     Cast = cast
                 });
             }

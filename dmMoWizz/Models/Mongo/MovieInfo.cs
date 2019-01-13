@@ -17,6 +17,18 @@ namespace dmMoWizz.Models.Mongo
     {
         public int id { get; set; }
         public string name { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var genre = obj as Genre;
+            return genre != null &&
+                   id == genre.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1877310944 + id.GetHashCode();
+        }
     }
 
     public class ProductionCompany
