@@ -17,13 +17,13 @@ namespace dmMoWizz.Services
     public class RecommendationService
     {
         private readonly MoviesRepository _moviesRepository;
-        private static readonly Dictionary<int, double> _scores;
+        private static readonly Dictionary<long, double> _scores;
 
         private static Info facebookInfo;
 
         static RecommendationService()
         {
-            _scores = new Dictionary<int, double>();
+            _scores = new Dictionary<long, double>();
         }
 
         public RecommendationService()
@@ -175,6 +175,10 @@ namespace dmMoWizz.Services
             foreach (var recommendation in similars)
             {
                 recommendation.Rating = Math.Round(recommendation.Rating / max * 100, MidpointRounding.AwayFromZero);
+                if (Double.IsNaN(recommendation.Rating) || Double.IsInfinity(recommendation.Rating))
+                {
+                    recommendation.Rating = 0;
+                }
                 _scores[recommendation.Movie.id] = recommendation.Rating;
             }
 
