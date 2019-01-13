@@ -330,7 +330,8 @@ namespace dmMoWizz.Controllers
                 Year = movieInfo.release_date.Split('-')[0],
                 Backdrop = "http://image.tmdb.org/t/p/w1280/" + movieInfo.backdrop_path,
                 Overview = movieInfo.overview,
-                PersonalRate = _recommendationService.GetRecommendation(movieId).ToString(),
+                PersonalRate = Math.Round(_recommendationService.GetRecommendation(movieId), 2).ToString() + "%",
+                Trailer = movieInfo.videos.results.FirstOrDefault(v => v.type.Equals("Trailer")).key
             };
 
             return PartialView("Summary", model);
