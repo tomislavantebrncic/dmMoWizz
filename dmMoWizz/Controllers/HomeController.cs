@@ -1,4 +1,5 @@
-﻿using dmMoWizz.Models.Mongo;
+﻿using dmMoWizz.DataFetchers;
+using dmMoWizz.Models.Mongo;
 using dmMoWizz.Models.Recommendations;
 using dmMoWizz.Models.ViewModels;
 using dmMoWizz.Repositories;
@@ -54,6 +55,21 @@ namespace dmMoWizz.Controllers
             var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
 
             var model = new HomePageViewModel();
+
+            string ip = Request.UserHostAddress;
+            Location location;
+            if (ip.CompareTo("::1") == 0)
+            {
+                location = LocationDataFetcher.getLocation("141.136.186.230");
+            }
+            else
+            {
+                location = LocationDataFetcher.getLocation(ip);
+            }
+            Forecast forecast = ForecastDataFetcher.getForecast(location.CityName);
+            model.Forecast = forecast.Data[0].Main;
+            Session.Add("Location", location.CityName);
+            Session.Add("Forecast", forecast.Data[0].Main);
 
             var movies = _movieService.GetPopular(8);
             foreach (MovieInfo movie in movies)

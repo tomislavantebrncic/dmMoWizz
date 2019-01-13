@@ -17,6 +17,8 @@ namespace dmMoWizz.Models.ViewModels
             Suggested = new List<HomePageMovieViewModel>();
             Popular = new List<HomePageMovieViewModel>();
         }
+
+        public string Forecast { get; set; }
     }
 
     public class HomePageMovieViewModel

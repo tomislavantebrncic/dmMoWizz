@@ -219,14 +219,17 @@
     <Compile Include="Controllers\MovieController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DataFetchers\ForecastDataFetcher.cs" />
+    <Compile Include="DataFetchers\LocationDataFetcher.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IPStackResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Mongo\Forecast.cs" />
+    <Compile Include="Models\Mongo\Location.cs" />
     <Compile Include="Models\Mongo\MovieInfo.cs" />
     <Compile Include="Models\Mongo\UserInfo.cs" />
     <Compile Include="Models\OpenWeatherMapResponse.cs" />
@@ -244,6 +247,7 @@
     <Compile Include="Models\ViewModels\WatchlistItemViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ForecastRepository.cs" />
+    <Compile Include="Repositories\LocationRepository.cs" />
     <Compile Include="Repositories\MoviesRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\Downloader.cs" />
@@ -392,4 +396,11 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+  </Target>
 </Project>
