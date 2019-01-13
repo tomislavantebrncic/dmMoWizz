@@ -104,7 +104,6 @@ namespace dmMoWizz.Controllers
                     PosterURL = "http://image.tmdb.org/t/p/w500/" + movieInfo.poster_path,
                     Year = movieInfo.release_date.Split('-')[0],
                     AddedOnDate = watchlistMovie.DateAdded.ToShortDateString(),
-                    // TO DO
                     PersonalRate = _recommendationService.GetRecommendation(movieInfo.id).ToString()+"%",
                     Cast = cast
                 });
@@ -121,47 +120,35 @@ namespace dmMoWizz.Controllers
         public ActionResult RecommendationsScroll(int from, int to, int friendsConst, int similarConst, int rateConst)
         {
             //used for infnite scroll
+
             var model = new List<RecommendationViewModel>();
-            model.Add(new RecommendationViewModel
+
+            var recommendations = _recommendationService.GetRecommendationList().Skip(from).Take(to).ToList();
+            foreach (var recommendation in recommendations)
             {
-                Title = "The Tiny Hedgehog",
-                AverageVote = "7.8",
-                PersonalRate = "98%",
-                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
-                Year="2018",
-                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
-                Id = 217
-            });
-            model.Add(new RecommendationViewModel
-            {
-                Title = "The Tiny Hedgehog",
-                AverageVote = "7.8",
-                PersonalRate = "98%",
-                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
-                Year = "2018",
-                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
-                Id = 217
-            });
-            model.Add(new RecommendationViewModel
-            {
-                Title = "The Tiny Hedgehog",
-                AverageVote = "7.8",
-                PersonalRate = "98%",
-                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
-                Year = "2018",
-                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
-                Id = 217
-            });
-            model.Add(new RecommendationViewModel
-            {
-                Title = "The Tiny Hedgehog",
-                AverageVote = "7.8",
-                PersonalRate = "98%",
-                Overview = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a tortor placerat leo eleifend dapibus ac eu odio. In hac habitasse platea dictumst. Suspendisse tempor finibus sollicitudin. Donec faucibus diam vel dapibus dapibus. Maecenas turpis tellus, mollis vel odio eu, faucibus pharetra elit. Quisque bibendum, orci at elementum accumsan, felis metus finibus orci, vitae porttitor nulla erat sed turpis. Aenean accumsan aliquam vehicula. Etiam erat tellus, semper id nisi sit amet, finibus interdum ex. Sed sit amet massa pulvinar, dictum risus sollicitudin, hendrerit risus. Curabitur et libero vitae diam sodales aliquamuisque commodo in mi eu interdum.Sed dui libero,",
-                Year = "2018",
-                PosterURL = "http://lorempixel.com/output/nightlife-q-c-640-480-5.jpg",
-                Id = 217
-            });
+                var movieInfo = recommendation.Movie;
+                var cast = new List<CastPersonViewModel>();
+                foreach (Cast castPerson in movieInfo.credits.cast)
+                {
+                    cast.Add(new CastPersonViewModel
+                    {
+                        Character = castPerson.character,
+                        Name = castPerson.name,
+                        Order = castPerson.order
+                    });
+                }
+                model.Add(new RecommendationViewModel
+                {
+                    Title = movieInfo.title,
+                    AverageVote = movieInfo.vote_average.ToString(),
+                    Id = movieInfo.id,
+                    Cast = cast,
+                    Overview = movieInfo.overview,
+                    PersonalRate = recommendation.Rating + "%",
+                    PosterURL = "http://image.tmdb.org/t/p/w500/" + movieInfo.poster_path,
+                    Year = movieInfo.release_date.Split('-')[0]
+                });
+            }
 
             return PartialView("RecommendationsScroll", model);
         }

@@ -17,10 +17,12 @@ namespace dmMoWizz.Services
     {
         private readonly MoviesRepository _moviesRepository;
         private static readonly Dictionary<int, double> _scores;
+        private static List<Recommendation> recommendations;
 
         static RecommendationService()
         {
             _scores = new Dictionary<int, double>();
+            recommendations = new List<Recommendation>();
         }
 
         public RecommendationService()
@@ -36,6 +38,11 @@ namespace dmMoWizz.Services
                 return _scores[movieId];
             }
             return -1;
+        }
+
+        public List<Recommendation> GetRecommendationList()
+        {
+            return recommendations;
         }
 
         public async Task<Info> GetInfoAsync(IList<System.Security.Claims.Claim> currentClaims, string urlString)
@@ -137,10 +144,11 @@ namespace dmMoWizz.Services
 
             similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
 
+            recommendations = similars;
             double max = similars.FirstOrDefault().Rating;
             foreach (var recommendation in similars)
             {
-                recommendation.Rating = recommendation.Rating / max * 100;
+                recommendation.Rating = Math.Round(recommendation.Rating / max * 100, 2);
                 _scores[recommendation.Movie.id] = recommendation.Rating;
             }
 
