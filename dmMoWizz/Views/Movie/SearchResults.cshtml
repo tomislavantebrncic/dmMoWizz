@@ -31,12 +31,19 @@ else
                                                 @movie.Title (@movie.Year)
                                             </h3>
                                         </div>
-                                        <div>
-                                            <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
-                                        </div>
+                                        @if (movie.Cast != null)
+                                        {
+                                            <div>
+                                                <span style="font-style:italic">@String.Join(", ", movie.Cast.Take(5).Select(x => x.Name))</span>
+                                            </div>
+                                        }
+                                        <hr />
                                         <div>
                                             @movie.Overview
                                         </div>
+                                        <a style="font-style:italic; color:#26a69a" href="/movie/details?movieId=@movie.Id">
+                                            See more...
+                                        </a>
                                         <div class="row" style="margin-top:50px">
                                             <div class="col s2">
                                                 <div class="center-align">
@@ -48,18 +55,27 @@ else
                                             </div>
                                             <div class="col s2">
                                                 @*<div class="valign-wrapper">
-                                                    <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
-                                                    <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.</span>
-                                                </div>*@
+                    <i class="material-icons" style="color:#26a69a; font-size:3rem">thumb_up</i>
+                    <span style="font-weight:bold; color:#26a69a; margin-left:15px">@movie.</span>
+                </div>*@
                                             </div>
                                             <div class="col s6">
-                                                <div class="right-align">
-                                                    <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
-                                                </div>
+                                                @*<div class="right-align">
+                    <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
+                </div>*@
                                             </div>
                                             <div class="col s2">
                                                 <div class="right-align">
-                                                    <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>Add</a>
+                                                    @if (!movie.AddedToWatchlist)
+                                                    {
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id" style="display:none"><i class="material-icons left">add_to_queue</i>ADD</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -72,15 +88,34 @@ else
             </table>
         </div>
     </div>
-    <!-- Modal Structure -->
-    @*<div id="modal" class="modal" style="top:40% !important; width:40% !important">
-        <div class="modal-content">
-            <div class="center-align">
-                @for (int i = 1; i <= 10; ++i)
-                {
-                    <i class="material-icons emptystar" id="@i" style="color:#26a69a; font-size:3rem">star_border</i>
-                }
-            </div>
-        </div>
-    </div>*@
 }
+<script>
+    $('.addtowatchlist').click(function () {
+        var element = $(this);
+        var id = $(this).attr("data-id")
+        $.ajax({
+            type: "POST",
+            url: "/user/addtowatchlist?id=" + id,
+            data: id,
+            success: function () {
+                element.fadeOut(1);
+                element.next().fadeIn();
+                M.toast({ html: 'Added to watchlist.' })
+            },
+        });
+    });
+    $('.removefromwatchlist').click(function () {
+        var element = $(this);
+        var id = $(this).attr("data-id")
+        $.ajax({
+            type: "POST",
+            url: "/user/removefromWatchlist?id=" + id,
+            data: id,
+            success: function () {
+                element.fadeOut(1);
+                element.prev().fadeIn();
+                M.toast({ html: 'Removed from watchlist.' })
+            },
+        });
+    });
+</script>

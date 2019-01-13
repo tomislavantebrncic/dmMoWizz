@@ -290,7 +290,9 @@ namespace dmMoWizz.Controllers
                     Overview = movie.overview,
                     PosterURL = "http://image.tmdb.org/t/p/w500/" + movie.poster_path,
                     Cast = cast,
-                    Genres = genres
+                    Genres = genres,
+                    //TODO
+                    AddedToWatchlist = false
                 });
             }
 

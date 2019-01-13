@@ -71,7 +71,7 @@ else
                                             </div>
                                             <div class="col s2">
                                                 <div class="right-align">
-                                                    @if (movie.AddedToWatchlist)
+                                                    @if (!movie.AddedToWatchlist)
                                                     {
                                                         <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
                                                         <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
