@@ -179,7 +179,7 @@ namespace dmMoWizz.Controllers
                 }
 
             var ratings = new List<RatingViewModel>();
-            if (movieInfo.Ratings != null)
+            if (movieInfo.Ratings != null) {
                 foreach (var rating in movieInfo.Ratings)
                 {
                     ratings.Add(new RatingViewModel
@@ -188,6 +188,21 @@ namespace dmMoWizz.Controllers
                         Value = rating.Value
                     });
                 }
+            }
+
+            var soundtracks = new List<SoundtrackViewModel>();
+            if (movieInfo.Soundtrack != null)
+            {
+                foreach (var song in movieInfo.Soundtrack)
+                {
+                    soundtracks.Add(new SoundtrackViewModel
+                    {
+                        Author = song.Artist.Name,
+                        Title = song.Name,
+                        Url = song.TunefindUrl
+                    });
+                }
+            }
 
             var model = new MovieDetailsViewModel
             {
@@ -220,7 +235,8 @@ namespace dmMoWizz.Controllers
                 SimilarMovies = similars.ToArray(),
                 SpokenLanguages = languages.ToArray(),
                 Trailers = trailers.ToArray(),
-                Ratings = ratings.ToArray()
+                Ratings = ratings.ToArray(),
+                Soundtracks = soundtracks.ToArray()
             };
 
             return View(model);
@@ -362,7 +378,7 @@ namespace dmMoWizz.Controllers
         {
             var user = _userRepository.Get(HttpContext.User.Identity.GetUserId());
 
-            var movies = _movieService.GetPopular(8);
+            var movies = _movieService.GetPopular(20);
 
             var model = new List<PopularMovieViewModel>();
 
