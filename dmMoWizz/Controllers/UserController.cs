@@ -84,6 +84,8 @@ namespace dmMoWizz.Controllers
             {
                 var movieInfo = _moviesRepository.GetMovie(watchlistMovie.Id);
 
+                var rate = userInfo.Ratings.FirstOrDefault(r => r.MovieId.Equals(movieInfo.id));
+                
                 var cast = new List<CastPersonViewModel>();
                 if (movieInfo.credits != null && movieInfo.credits.cast != null)
                     foreach (Cast castPerson in movieInfo.credits.cast)
@@ -106,7 +108,9 @@ namespace dmMoWizz.Controllers
                     Year = movieInfo.release_date.Split('-')[0],
                     AddedOnDate = watchlistMovie.DateAdded.ToShortDateString(),
                     PersonalRate = _recommendationService.GetRecommendation(movieInfo.id).ToString()+"%",
-                    Cast = cast
+                    Cast = cast,
+                    
+                    Rate = rate != null ? rate.ToString() : null
                 });
             }
 

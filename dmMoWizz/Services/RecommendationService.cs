@@ -18,15 +18,12 @@ namespace dmMoWizz.Services
     {
         private readonly MoviesRepository _moviesRepository;
         private static readonly Dictionary<int, double> _scores;
-        private static List<Recommendation> recommendations;
 
         private static Info facebookInfo;
 
         static RecommendationService()
         {
             _scores = new Dictionary<int, double>();
-            recommendations = new List<Recommendation>();
-
         }
 
         public RecommendationService()
@@ -42,11 +39,6 @@ namespace dmMoWizz.Services
                 return _scores[movieId];
             }
             return -1;
-        }
-
-        public List<Recommendation> GetRecommendationList()
-        {
-            return recommendations;
         }
 
         public async Task<Info> GetInfoAsync(IList<System.Security.Claims.Claim> currentClaims, string urlString)
@@ -87,11 +79,6 @@ namespace dmMoWizz.Services
             return GetRecommendations(user, info, friendsConst, similarConst, rateConst);
         }
 
-        public async Task<List<Recommendation>> GetRecommendationsFriends(IList<System.Security.Claims.Claim> currentClaims)
-        {
-            return GetFriendsRecommendations(await GetInfoAsync(currentClaims, "https://graph.facebook.com/me?fields=id,name,likes.limit(100){{category,name}},friends.limit(1000){{likes.limit(1000){{category,name}}}}&access_token={0}"));
-        }
-
         public List<Recommendation> GetRecommendations(UserInfo user, int friendsConst, int similarConst, int rateConst)
         {
             return GetRecommendations(user, facebookInfo, friendsConst, similarConst, rateConst);
@@ -123,7 +110,7 @@ namespace dmMoWizz.Services
                 foreach (var movie in friend.Likes.Data)
                 {
                     var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
-                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo, friendsConst);
+                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo, friendsConst-1);
                 }
             }
 
@@ -145,7 +132,7 @@ namespace dmMoWizz.Services
                 var recSim = similars.FirstOrDefault(r => r.Equals(recommendation));
                 if (recSim != null)
                 {
-                    recSim.Update(recommendation.Rating * 2);
+                    recSim.Update(recommendation.Rating);
                 }
             }
 
@@ -184,7 +171,6 @@ namespace dmMoWizz.Services
             similars = similars.FindAll(r => !user.Watchlist.Contains(new WatchlistMovie { Id = r.Movie.id }));
             similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
 
-            recommendations = similars;
             double max = similars.FirstOrDefault().Rating;
             foreach (var recommendation in similars)
             {
@@ -193,39 +179,6 @@ namespace dmMoWizz.Services
             }
 
             return similars;
-        }
-
-        public List<Recommendation> GetWatchlistRecommendations(UserInfo userInfo)
-        {
-            List<Recommendation> similars = new List<Recommendation>();
-
-            foreach (var watchlistMovie in userInfo.Watchlist)
-            {
-                var movieInfo = _moviesRepository.GetMovie(watchlistMovie.Id);
-
-                FillSimilars(similars, movieInfo, 5);
-            }
-
-            similars.Sort((rec1, rec2) => rec1.CompareTo(rec2));
-
-            return similars;
-        }
-
-        public List<Recommendation> GetFriendsRecommendations(Info info)
-        {
-            List<Recommendation> recommendations = new List<Recommendation>();
-
-            List<Recommendation> friendsSimilars = new List<Recommendation>();
-            foreach (var friend in info.Friends.Data)
-            {
-                foreach (var movie in friend.Likes.Data)
-                {
-                    var movieInfo = _moviesRepository.GetMovieFromTitle(movie.Name);
-                    UpdateRecommendationsForMovie(friendsSimilars, movieInfo, 1);
-                }
-            }
-
-            return recommendations;
         }
 
         #region Helper Methods
@@ -274,6 +227,10 @@ namespace dmMoWizz.Services
         private double CalculateAvgRate(MovieInfo movie)
         {
             var ratings = movie.Ratings;
+            if (ratings == null)
+            {
+                return 0;
+            }
             double sum = 0;
             int count = 0;
             foreach (var rating in ratings)
