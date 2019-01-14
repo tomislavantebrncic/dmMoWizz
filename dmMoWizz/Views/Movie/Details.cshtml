@@ -59,9 +59,9 @@
     <div class="col s6">
         @if (Model.Tagline != null && Model.Tagline != "")
         {
-            <h4 class="center-align" style="margin-bottom:50px"><i>@Model.Tagline</i></h4>
+            <h4 class="center-align"><i>@Model.Tagline</i></h4>
         }
-        <div class="row center-align">
+        <div class="row center-align" style="margin-top:50px">
             @if (Model.Rate == null)
             {
                 <a class="waves-effect waves-light btn rate" data-id="@Model.Id"><i class="material-icons left">rate_review</i>Rate</a>
