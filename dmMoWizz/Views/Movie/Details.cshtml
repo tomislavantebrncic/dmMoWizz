@@ -59,8 +59,29 @@
     <div class="col s6">
         @if (Model.Tagline != null && Model.Tagline != "")
         {
-            <h4 class="center-align"><i>@Model.Tagline</i></h4>
+            <h4 class="center-align" style="margin-bottom:50px"><i>@Model.Tagline</i></h4>
         }
+        <div class="row center-align">
+            @if (Model.Rate == null)
+            {
+                <a class="waves-effect waves-light btn rate" data-id="@Model.Id"><i class="material-icons left">rate_review</i>Rate</a>
+            }
+            else
+            {
+                <a class="waves-effect waves-light btn" disabled><i class="material-icons left">rate_review</i>Rated @Model.Rate</a>
+            }
+
+            @if (!Model.InWatchlist)
+            {
+                <a class="waves-effect waves-light btn addtowatchlist" data-id="@Model.Id"><i class="material-icons left">add_to_queue</i>Add to watchlist</a>
+                <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@Model.Id"><i class="material-icons left">remove_from_queue</i>Remove from watchlist</a>
+            }
+            else
+            {
+                <a class="waves-effect waves-light btn addtowatchlist" data-id="@Model.Id" style="display:none"><i class="material-icons left">add_to_queue</i>Add to watchlist</a>
+                <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@Model.Id"><i class="material-icons left">remove_from_queue</i>Remove from watchlist</a>
+            }
+        </div>
 
         <ul class="collection teal-text section scrollspy" id="info">
             <li class="collection-item valign-wrapper"><i class="material-icons" style="margin-right:20px">attach_money</i> @Model.Revenue $</li>
@@ -209,12 +230,90 @@
         }
     </div>
 </div>
+<div id="modal" class="modal" style="top:40% !important; width:40% !important">
+    <div class="modal-content">
+        <div class="center-align">
+            @for (int i = 1; i <= 10; ++i)
+            {
+                <i class="material-icons emptystar" id="@i" style="color:#26a69a; font-size:3rem">star_border</i>
+            }
+        </div>
+    </div>
+</div>
 <script>
     $('.carousel.carousel-slider').carousel({
         fullWidth: true
     });
     $(document).ready(function () {
         $('.scrollspy').scrollSpy();
+        $('.addtowatchlist').click(function () {
+            var element = $(this);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/addtowatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut(1);
+                    element.next().fadeIn();
+                    M.toast({ html: 'Added to watchlist.' })
+                },
+            });
+        });
+        $('.removefromwatchlist').click(function () {
+            var element = $(this);
+            var id = $(this).attr("data-id")
+            $.ajax({
+                type: "POST",
+                url: "/user/removefromWatchlist?id=" + id,
+                data: id,
+                success: function () {
+                    element.fadeOut(1);
+                    element.prev().fadeIn();
+                    M.toast({ html: 'Removed from watchlist.' })
+                },
+                error: function () {
+                    M.toast({ html: 'Oops! Something went wrong. Movie was not removed form watchlist.' })
+                }
+            });
+        });
+        $('.rate').click(function () {
+            buttonToDisable = $(this);
+            var id = $(this).attr('data-id');
+            $('#modal').attr("data-id", id);
+            $('#modal').modal();
+            $('#modal').modal('open');
+        });
+        $('.emptystar').mouseover(function () {
+            var index = $(this).attr('id');
+            for (var i = 1; i <= index; ++i) {
+                $('#' + i).text("star");
+            }
+            for (var i = Number(index) + 1; i <= 10; ++i) {
+                $('#' + i).text("star_border");
+            }
+        });
+        $('.emptystar').click(function (e) {
+            var index = $(this).attr('id');
+            var id = $('#modal').attr("data-id");
+            buttonToDisable.attr("disabled", "disabled");
+            buttonToDisable.html('Rated ' + index);
+            $.ajax({
+                type: "POST",
+                url: "/user/rate?movieid=" + id + "&rating=" + index,
+                data: id,
+                success: function () {
+                    $('#modal').modal('close');
+                    M.toast({ html: 'Movie rated.' });
+                    for (var i = 1; i <= 10; ++i) {
+                        $('#' + i).text("star_border");
+                    }
+                },
+                error: function () {
+                    M.toast({ html: 'Oops! Something went wrong. Movie was not rated.' })
+                }
+            });
+        });
     });
 </script>
 

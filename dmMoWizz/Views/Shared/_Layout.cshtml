@@ -27,7 +27,20 @@
                     <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">location_on</i><span class="white-text">@Session["Location"]</span>
                 </div>
                 <div class="valign-wrapper">
-                    <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">wb_sunny</i><span class="white-text">@Session["Forecast"]</span>
+                    @if ((string)Session["Forecast"] == "Snow" || (string)Session["Forecast"] == "Clouds" || (string)Session["Forecast"] == "Rain" || (string)Session["Forecast"] == "Drizzle")
+                    {
+                        <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">wb_cloudy</i>
+                    }
+                    else if ((string)Session["Forecast"] == "Clear")
+                    {
+                        <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">wb_sunny</i>
+                    }
+                    else
+                    {
+                        <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">flash_on</i>
+
+                    }
+                    <span class="white-text">@Session["Forecast"]</span>
                 </div>
                 <a href="#name"><span class="white-text name" style="padding-bottom:20px">@System.Web.HttpContext.Current.User.Identity.Name</span></a>
             </div>
