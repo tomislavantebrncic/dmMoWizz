@@ -55,15 +55,15 @@
                                                 </div>
                                             </div>
                                             <div class="col s6">
-                                                <div class="right-align">
+                                                @*<div class="right-align">
                                                     <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
-                                                </div>
+                                                </div>*@
                                             </div>
                                             <div class="col s2">
-                                                <div class="right-align">
+                                                @*<div class="right-align">
                                                     <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>Add</a>
                                                     <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id" style="display:none"><i class="material-icons left">remove_from_queue</i>Remove</a>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                     </div>
@@ -83,34 +83,3 @@ else
         <p style="font-style:italic; font-size:1rem">No more movies to show.</p>
     </div>
 }
-
-<script>
-    $('.addtowatchlist').click(function () {
-        var element = $(this);
-        var id = $(this).attr("data-id")
-        $.ajax({
-            type: "POST",
-            url: "/user/addtowatchlist?id=" + id,
-            data: id,
-            success: function () {
-                element.fadeOut(1);
-                element.next().fadeIn();
-                M.toast({ html: 'Added to watchlist.' })
-            },
-        });
-    });
-    $('.removefromwatchlist').click(function () {
-        var element = $(this);
-        var id = $(this).attr("data-id")
-        $.ajax({
-            type: "POST",
-            url: "/user/removefromWatchlist?id=" + id,
-            data: id,
-            success: function () {
-                element.fadeOut(1);
-                element.prev().fadeIn();
-                M.toast({ html: 'Removed from watchlist.' })
-            },
-        });
-    });
-</script>

@@ -47,7 +47,7 @@ else
                                         <div>
                                             @movie.Overview
                                         </div>
-                                        <a style="font-style:italic; color:#26a69a; font-size:bold" href="/movie/details?movieId=@movie.Id">
+                                        <a style="font-style:italic; color:#26a69a; font-weight:bold" href="/movie/details?movieId=@movie.Id">
                                             See more...
                                         </a>
                                         <div class="row" style="margin-top:50px">
@@ -68,22 +68,22 @@ else
                                                     </div>
                                                 }
                                             </div>
-                                            <div class="col s6">
+                                            <div class="col s4">
                                                 @*<div class="right-align">
                     <a class="waves-effect waves-light btn rate" data-id="@movie.Id"><i class="material-icons left">rate_review</i>Rate</a>
                 </div>*@
                                             </div>
-                                            <div class="col s2">
+                                            <div class="col s4">
                                                 <div class="right-align">
                                                     @if (!movie.AddedToWatchlist)
                                                     {
-                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>ADD</a>
-                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                    <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id"><i class="material-icons left">add_to_queue</i>Add to watchlist</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" style="display:none" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove from watchlist</a>
                                                     }
                                                     else
                                                     {
-                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id" style="display:none"><i class="material-icons left">add_to_queue</i>ADD</a>
-                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove</a>
+                                                        <a class="waves-effect waves-light btn addtowatchlist" data-id="@movie.Id" style="display:none"><i class="material-icons left">add_to_queue</i>Add to watchlist</a>
+                                                        <a class="waves-effect waves-light btn removefromwatchlist red lighten-2" data-id="@movie.Id"><i class="material-icons left">remove_from_queue</i>Remove from watchlist</a>
                                                     }
                                                 </div>
                                             </div>
