@@ -100,10 +100,15 @@ namespace dmMoWizz.Repositories
 
             if (genres.Count != 0)
             {
+                var genreBuilder = Builders<MovieInfo>.Filter;
+                IList<FilterDefinition<MovieInfo>> genreFilters = new List<FilterDefinition<MovieInfo>>();
+
                 foreach (var gen in genres)
                 {
-                    filters.Add(builder.ElemMatch<Genre>(m => m.genres, g => g.id == gen.id));
+                    genreFilters.Add(genreBuilder.ElemMatch<Genre>(m => m.genres, g => g.id == gen.id));
                 }
+
+                filters.Add(genreBuilder.Or(genreFilters));
             }
 
             return _moviesCollection.Find(builder.And(filters)).ToList();
