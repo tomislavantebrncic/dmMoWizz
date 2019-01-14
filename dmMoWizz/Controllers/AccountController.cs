@@ -73,17 +73,22 @@ namespace dmMoWizz.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            System.Diagnostics.Debug.WriteLine("U loginu");
             if (!ModelState.IsValid)
             {
+                System.Diagnostics.Debug.WriteLine("Model ne valja");
+
                 return View(model);
             }
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            System.Diagnostics.Debug.WriteLine(result);
             switch (result)
             {
                 case SignInStatus.Success:
+                    System.Diagnostics.Debug.WriteLine("Success: ");
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -279,6 +284,7 @@ namespace dmMoWizz.Controllers
         [AllowAnonymous]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            System.Diagnostics.Debug.WriteLine("External Login " + returnUrl + " " + provider);
             // Request a redirect to the external login provider
             //imamo samo facebook pa sam maknula provider i stavila facebook na njegovo mjesto
             return new ChallengeResult("Facebook", Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
@@ -324,11 +330,17 @@ namespace dmMoWizz.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
+            System.Diagnostics.Debug.WriteLine("U external loginu callbacku");
+
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
+                System.Diagnostics.Debug.WriteLine("Ingo j null");
+
                 return RedirectToAction("Login");
             }
+            System.Diagnostics.Debug.WriteLine("info nije null");
+
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);

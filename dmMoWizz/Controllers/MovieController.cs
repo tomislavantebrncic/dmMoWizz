@@ -54,6 +54,7 @@ namespace dmMoWizz.Controllers
         public ActionResult Details(int movieId)
         {
             var movieInfo = _moviesRepository.GetMovie(movieId);
+            var userInfo = _userRepository.Get(HttpContext.User.Identity.GetUserId());
 
             if (movieInfo == null)
             {
@@ -204,6 +205,8 @@ namespace dmMoWizz.Controllers
                 }
             }
 
+            var rate = userInfo.Ratings.FirstOrDefault(r => r.MovieId.Equals(movieInfo.id));
+
             var model = new MovieDetailsViewModel
             {
                 Overview = movieInfo.overview,
@@ -236,7 +239,9 @@ namespace dmMoWizz.Controllers
                 SpokenLanguages = languages.ToArray(),
                 Trailers = trailers.ToArray(),
                 Ratings = ratings.ToArray(),
-                Soundtracks = soundtracks.ToArray()
+                Soundtracks = soundtracks.ToArray(),
+                InWatchlist = userInfo.Watchlist.Contains(new WatchlistMovie { Id = movieInfo.id }),
+                Rate = rate?.Rating.ToString()
             };
 
             return View(model);
@@ -384,6 +389,17 @@ namespace dmMoWizz.Controllers
 
             foreach (MovieInfo movie in movies)
             {
+
+                var genres = new List<GenreViewModel>();
+                foreach (var genre in movie.genres)
+                {
+                    genres.Add(new GenreViewModel
+                    {
+                        Id = genre.id,
+                        Name = genre.name
+                    });
+                }
+
                 model.Add(new PopularMovieViewModel
                 {
                     Id = movie.id,
@@ -396,7 +412,8 @@ namespace dmMoWizz.Controllers
                     Year = movie.release_date.Split('-')[0],
                     Cast = movie.credits.cast.Take(5).Select(x => new CastPersonViewModel {
                         Name = x.name
-                    }).ToList()
+                    }).ToList(),
+                    Genres = genres
                 });
             }
 
