@@ -72,15 +72,21 @@ namespace dmMoWizz.Controllers
                 });
             }
 
+            int i = 0;
             var crew = new List<CrewViewModel>();
             foreach (Crew castPerson in movieInfo.credits.crew)
             {
+                if (i > 10)
+                {
+                    break;
+                }
                 crew.Add(new CrewViewModel
                 {
                     Department = castPerson.department,
                     Name = castPerson.name,
                     Job = castPerson.job
                 });
+                i++;
             }
 
             var backdrops = new List<ImageViewModel>();
