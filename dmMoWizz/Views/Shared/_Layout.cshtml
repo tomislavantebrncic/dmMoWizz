@@ -12,8 +12,6 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    @*<div style="width: 200px; background-image: url(/Images/demo-image-02.jpg); z-index: 10; position: fixed; left: 0px; top: 0px; height: 100%;">
-        </div>*@
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large teal sidenav-trigger" data-target="slide-out">
             <i class="large material-icons">menu</i>
@@ -25,8 +23,13 @@
                 <div class="background">
                     <img src="~/Images/bg-signup.jpg">
                 </div>
-
-                <a href="#name"><span class="white-text name">@System.Web.HttpContext.Current.User.Identity.Name</span></a>
+                <div class="valign-wrapper">
+                    <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">location_on</i><span class="white-text">@Session["Location"]</span>
+                </div>
+                <div class="valign-wrapper">
+                    <i class="material-icons" style="font-size: 24px; color: white; margin-right: 30px;">wb_sunny</i><span class="white-text">@Session["Forecast"]</span>
+                </div>
+                <a href="#name"><span class="white-text name" style="padding-bottom:20px">@System.Web.HttpContext.Current.User.Identity.Name</span></a>
             </div>
         </li>
         <li><a href="/"><i class="material-icons">home</i>Home</a></li>
@@ -35,10 +38,6 @@
         <li><a class="waves-effect" href="/user/recommendations"><i class="material-icons">face</i> Recommended</a></li>
         <li><a class="waves-effect" href="/movie/popular"><i class="material-icons">trending_up</i> Popular</a></li>
         <li><a class="waves-effect" href="/account/logoff"><i class="material-icons">power_settings_new</i> Logout</a></li>
-        <li>
-            <a href=""><span class="black-text name">Location: @Session["Location"]</span></a>
-            <a href=""><span class="black-text name">Forecast: @Session["Forecast"]</span></a>
-        </li>
     </ul>
 
     @RenderBody()
