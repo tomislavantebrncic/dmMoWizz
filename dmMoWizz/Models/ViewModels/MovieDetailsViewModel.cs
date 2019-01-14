@@ -27,6 +27,8 @@ namespace dmMoWizz.Models.ViewModels
         public string Title { get; set; }
         public string VoteAverage { get; set; }
         public int VoteCount { get; set; }
+        public bool InWatchlist { get; set; }
+        public string Rate { get; set; }
 
         public CreditsViewModel Credits { get; set; }
         public SimilarMovieViewModel[] SimilarMovies { get; set; }

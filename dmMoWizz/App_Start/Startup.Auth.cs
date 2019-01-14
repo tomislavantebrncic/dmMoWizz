@@ -65,6 +65,7 @@ namespace dmMoWizz
                 {
                     OnAuthenticated = context =>
                     {
+                        System.Diagnostics.Debug.WriteLine("jesam li tu?");
                         context.Identity.AddClaim(new System.Security.Claims.Claim("urn:tokens:facebook", context.AccessToken));
                         return Task.FromResult(0);
                     }
@@ -76,11 +77,6 @@ namespace dmMoWizz
             facebookAuthenticationOptions.Scope.Add("email user_friends user_gender user_likes");
 
             app.UseFacebookAuthentication(facebookAuthenticationOptions);
-
-            //app.UseFacebookAuthentication(
-            //   appId: ConfigurationManager.AppSettings["FacebookAppId"],
-            //   appSecret: ConfigurationManager.AppSettings["FacebookAppSecret"]
-            //);
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
